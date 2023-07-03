@@ -10,7 +10,7 @@ tags:
   - name: sessions
     description: Всё про управление игровыми сессиями
   - name: bot
-    description: Всё про взаимодействие с ботом участиков хакатона
+    description: (КОНТРАКТ БОТА) Всё про взаимодействие с ботом участиков хакатона
 paths:
   /sessions:
     post:
@@ -36,6 +36,14 @@ paths:
       summary: Получить все текущие и законченные игровые сессии
       description: Если query-параметр isActive не передан, то тогда возвращаются все сессии, иначе получим только активные/неактивные игровые сессии в зависимости от значения параметра isActive
       operationId: getAllSessions
+      parameters:
+        - name: isActive
+          in: query
+          description: Флаг активности сессии
+          required: false
+          schema:
+            type: string
+            format: boolean
       responses:
         '200':
           description: Сессии успешно получены
@@ -73,6 +81,10 @@ paths:
       responses:
         '200':
           description: Бот успешно зарегистрирован в сессии
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterBotInSessionResponse'
         '400':
           description: Некорректный запрос
         '404':
@@ -180,27 +192,34 @@ components:
           type: string
           format: UUID
           example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+    RegisterBotInSessionResponse:
+      type: object
+      properties:
+        figure:
+          type: string
+          format: Один символ 'x' или 'o', чем будет ходить данный бот
+          example: "x"
     BotTurnRequest:
       type: object
       properties:
         game_field:
           type: string
           format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
-          example: " oo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
+          example: "_oo___oo_xoxo__xoo_o_oxx_oo_x______o_______x___oo_x_x_o_x_______oxo___o_x__o_o______x__o_____x__o_____o______x_____xoxoo___xo_____o__x_x__________x__x____o_xo__x__o___x_______o_x______xo______oxo_x_xx__xox___ox____x_oo__ox_x_x___o__________x______________o_____x____o___x___xo___x__x_xo__x_x___ox___x_______x____x_o_x__x_o__ox__o__x__ox_x_____x_oo_____x____o_ox"
     BotTurnResponse:
       type: object
       properties:
         game_field:
           type: string
           format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
-          example: "ooo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
+          example: "ooo___oo_xoxo__xoo_o_oxx_oo_x______o_______x___oo_x_x_o_x_______oxo___o_x__o_o______x__o_____x__o_____o______x_____xoxoo___xo_____o__x_x__________x__x____o_xo__x__o___x_______o_x______xo______oxo_x_xx__xox___ox____x_oo__ox_x_x___o__________x______________o_____x____o___x___xo___x__x_xo__x_x___ox___x_______x____x_o_x__x_o__ox__o__x__ox_x_____x_oo_____x____o_ox"
     SessionStateResponse:
       type: object
       properties:
         game_field:
           type: string
           format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
-          example: " oo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
+          example: "_oo___oo_xoxo__xoo_o_oxx_oo_x______o_______x___oo_x_x_o_x_______oxo___o_x__o_o______x__o_____x__o_____o______x_____xoxoo___xo_____o__x_x__________x__x____o_xo__x__o___x_______o_x______xo______oxo_x_xx__xox___ox____x_oo__ox_x_x___o__________x______________o_____x____o___x___xo___x__x_xo__x_x___ox___x_______x____x_o_x__x_o__ox__o__x__ox_x_____x_oo_____x____o_ox"
         last_turn_time:
           type: string
           format: timestamp
@@ -239,4 +258,4 @@ components:
         game_field:
           type: string
           format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
-          example: " oo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
+          example: "_oo___oo_xoxo__xoo_o_oxx_oo_x______o_______x___oo_x_x_o_x_______oxo___o_x__o_o______x__o_____x__o_____o______x_____xoxoo___xo_____o__x_x__________x__x____o_xo__x__o___x_______o_x______xo______oxo_x_xx__xox___ox____x_oo__ox_x_x___o__________x______________o_____x____o___x___xo___x__x_xo__x_x___ox___x_______x____x_o_x__x_o__ox__o__x__ox_x_____x_oo_____x____o_ox"
