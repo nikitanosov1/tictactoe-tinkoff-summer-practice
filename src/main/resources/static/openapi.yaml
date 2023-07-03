@@ -1,0 +1,242 @@
+openapi: 3.0.3
+info:
+  title: Game mediator
+  description: |-
+    Сервис для обеспечения игры в крестики-нолики между двумя ботами на поле 19x19
+  contact:
+    email: nikinosov2002@mail.ru
+  version: 1.0.0
+tags:
+  - name: sessions
+    description: Всё про управление игровыми сессиями
+  - name: bot
+    description: Всё про взаимодействие с ботом участиков хакатона
+paths:
+  /sessions:
+    post:
+      tags:
+        - sessions
+      summary: Создать игровую сессию
+      description: Создается пустая игровая сессия
+      operationId: createSession
+      responses:
+        '200':
+          description: Сессия успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateResponse'
+        '400':
+          description: Некорректный запрос
+        '409':
+          description: Конфликт (игровая сессия между этими ботами уже идет)
+    get:
+      tags:
+        - sessions
+      summary: Получить все текущие и законченные игровые сессии
+      description: Если query-параметр isActive не передан, то тогда возвращаются все сессии, иначе получим только активные/неактивные игровые сессии в зависимости от значения параметра isActive
+      operationId: getAllSessions
+      responses:
+        '200':
+          description: Сессии успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FullSessionStateResponse'
+        '400':
+          description: Некорректный запрос
+
+  /sessions/{session_id}:
+    put:
+      tags:
+        - sessions
+      summary: Зарегистрировать бота в игровой сессии
+      description: Бот с айди bot_id регистрируется в игровой сессии с айди session_id
+      operationId: registerBot
+      parameters:
+        - name: session_id
+          in: path
+          description: UUID сессии
+          required: true
+          schema:
+            type: string
+            format: UUID
+      requestBody:
+        description: Данные для регистрации бота в сессии
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBotInSessionRequest'
+        required: true
+      responses:
+        '200':
+          description: Бот успешно зарегистрирован в сессии
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Не найдена игровая сессия с таким session_id
+    get:
+      tags:
+        - sessions
+      summary: Получить текущее состояние сессии по session_id
+      description: Получение текущего состояния игровой сессии по ее UUID
+      operationId: getCurrentSessionStateBySessionId
+      parameters:
+        - name: session_id
+          in: path
+          description: UUID сессии
+          required: true
+          schema:
+            type: string
+            format: UUID
+      responses:
+        '200':
+          description: Сервер успешно вернул текущее состояние игрвовой сессии
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStateResponse'
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Не найдена игровая сессия с таким session_id
+  /sessions/{session_id}/turn/{turn}:
+    get:
+      tags:
+        - sessions
+      summary: Получить состояние сессии по id и номеру шага
+      description: Получить состояние сессии по ее session_id и номеру шага turn
+      operationId: getSessionStateBySessionIdAndTurn
+      parameters:
+        - name: session_id
+          in: path
+          description: UUID сессии
+          required: true
+          schema:
+            type: string
+            format: UUID
+        - name: turn
+          in: path
+          description: номер хода
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Состояние сессии в момент шага turn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStateResponse'
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Не найдена игровая сессия с таким session_id и шагом turn
+
+  /bot/turn:
+    post:
+      tags:
+        - bot
+      summary: Попросить бота сделать ход
+      description: Бот получает текущее игровое поле и возвращает новое игровое поле (сделав новый ход)
+      operationId: makeAMove
+      requestBody:
+        description: Данные, которые получает бот участников хакатона
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BotTurnRequest'
+        required: true
+      responses:
+        '200':
+          description: Бот успешно сходил
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BotTurnResponse'
+        '400':
+          description: Некорректный запрос
+
+components:
+  schemas:
+    SessionCreateResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: UUID
+          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+    RegisterBotInSessionRequest:
+      type: object
+      properties:
+        bot_id:
+          type: integer
+          format: int64
+          example: 223
+        session_id:
+          type: string
+          format: UUID
+          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+    BotTurnRequest:
+      type: object
+      properties:
+        game_field:
+          type: string
+          format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
+          example: " oo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
+    BotTurnResponse:
+      type: object
+      properties:
+        game_field:
+          type: string
+          format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
+          example: "ooo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
+    SessionStateResponse:
+      type: object
+      properties:
+        game_field:
+          type: string
+          format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
+          example: " oo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
+        last_turn_time:
+          type: string
+          format: timestamp
+          example: "2020-04-08T07:30:10Z"
+    FullSessionStateResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: UUID
+          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+        first_bot_id:
+          type: integer
+          format: int64
+          example: 223
+        second_bot_id:
+          type: integer
+          format: int64
+          example: 563
+        total_turns:
+          type: integer
+          format: int64
+          example: 7
+        is_active:
+          type: boolean
+          format: true/false
+          example: true
+        updated_at:
+          type: string
+          format: timestamp
+          example: "2020-04-08T07:30:10Z"
+        created_at:
+          type: string
+          format: timestamp
+          example: "2020-04-08T07:30:10Z"
+        game_field:
+          type: string
+          format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
+          example: " oo   oo xoxo  xoo o oxx oo x      o       x   oo x x o x       oxo   o x  o o      x  o     x  o     o      x     xoxoo   xo     o  x x          x  x    o xo  x  o   x       o x      xo      oxo x xx  xox   ox    x oo  ox x x   o          x              o     x    o   x   xo   x  x xo  x x   ox   x       x    x o x  x o  ox  o  x  ox x     x oo     x    o ox"
