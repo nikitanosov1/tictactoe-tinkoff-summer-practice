@@ -1,7 +1,6 @@
 package ru.tinkoff.tictactoe.session;
 
-import ru.tinkoff.tictactoe.session.dto.FullStateOfSessionResponseDto;
-import ru.tinkoff.tictactoe.session.dto.StateOfSessionResponseDto;
+import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,9 +10,9 @@ public interface SessionService {
 
     Figure registerBotInSession(UUID sessionId, UUID botId);
 
-    StateOfSessionResponseDto getCurrentStateOfSession(UUID sessionId);
+    StateOfSession getCurrentStateOfSession(UUID sessionId);
 
-    StateOfSessionResponseDto getStateOfSessionByTurn(UUID sessionId, Integer turn);
+    StateOfSession getStateOfSessionByTurn(UUID sessionId, Integer turn);
 
-    List<FullStateOfSessionResponseDto> getSessionsByIsActive(Boolean isActive);
+    List<StateOfSession> getSessionsByIsActive(Boolean isActive);
 }

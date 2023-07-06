@@ -56,8 +56,8 @@ paths:
         '400':
           description: Некорректный запрос
 
-  /sessions/{session_id}:
-    put:
+  /sessions/{session_id}/registration:
+    post:
       tags:
         - sessions
       summary: Зарегистрировать бота в игровой сессии
@@ -220,6 +220,10 @@ components:
           type: string
           format: timestamp
           example: "2020-04-08T07:30:10Z"
+        turn:
+          type: integer
+          format: int64
+          example: 6
     FullSessionStateResponse:
       type: object
       properties:

@@ -1,4 +1,4 @@
-package ru.tinkoff.tictactoe.session.dto;
+package ru.tinkoff.tictactoe.session.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class FullStateOfSessionResponseDto {
+class FullStateOfSessionResponseDto {
     @JsonProperty(value = "session_id")
     private UUID sessionId;
 

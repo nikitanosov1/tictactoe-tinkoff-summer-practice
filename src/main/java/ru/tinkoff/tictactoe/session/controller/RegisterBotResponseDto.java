@@ -1,4 +1,4 @@
-package ru.tinkoff.tictactoe.session.dto;
+package ru.tinkoff.tictactoe.session.controller;
 
 import lombok.*;
 import ru.tinkoff.tictactoe.session.Figure;
@@ -8,6 +8,6 @@ import ru.tinkoff.tictactoe.session.Figure;
 @Getter
 @Setter
 @Builder
-public class RegisterBotResponseDto {
+class RegisterBotResponseDto {
     private Figure figure;
 }

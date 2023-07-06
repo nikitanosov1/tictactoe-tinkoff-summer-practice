@@ -1,24 +1,23 @@
 package ru.tinkoff.tictactoe.session;
 
 import lombok.*;
-import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntity;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Session {
+@Builder
+public class StateOfSession {
     private UUID id;
     private UUID firstBotId;
     private UUID secondBotId;
-    private Integer totalTurns;
-    private List<TurnEntity> turnEntities;
+    private Integer turn;
+    private String gameField;
     private Boolean isActive;
     private Date updatedAt;
     private Date createdAt;
 }
+

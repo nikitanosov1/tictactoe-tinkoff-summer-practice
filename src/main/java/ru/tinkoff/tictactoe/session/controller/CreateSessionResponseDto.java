@@ -1,4 +1,4 @@
-package ru.tinkoff.tictactoe.session.dto;
+package ru.tinkoff.tictactoe.session.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class RegisterBotRequestDto {
-    @JsonProperty(value = "bot_id")
-    private UUID botId;
+class CreateSessionResponseDto {
+    @JsonProperty(value = "session_id")
+    private UUID sessionId;
 }
