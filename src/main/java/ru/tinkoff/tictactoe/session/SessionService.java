@@ -1,7 +1,5 @@
 package ru.tinkoff.tictactoe.session;
 
-import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntity;
-
 import java.util.List;
 import java.util.UUID;
 
