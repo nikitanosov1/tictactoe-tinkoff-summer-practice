@@ -2,7 +2,10 @@ package ru.tinkoff.tictactoe.session.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.tinkoff.tictactoe.session.Figure;
+import ru.tinkoff.tictactoe.session.Session;
 import ru.tinkoff.tictactoe.session.SessionService;
+import ru.tinkoff.tictactoe.session.StateOfSession;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,27 +19,32 @@ public class SessionController {
 
     @PostMapping("")
     public CreateSessionResponseDto createSession() {
-        return sessionMapper.toCreateSessionResponseDto(sessionService.createSession());
+        Session session = sessionService.createSession();
+        return sessionMapper.toCreateSessionResponseDto(session);
     }
 
     @GetMapping("")
     public List<FullStateOfSessionResponseDto> getSessions(@RequestParam(value = "isActive", required = false) Boolean isActive) {
-        return sessionMapper.toListFullStateOfSessionResponseDto(sessionService.getSessionsByIsActive(isActive));
+        List<StateOfSession> stateOfSessions = sessionService.getSessionsByIsActive(isActive);
+        return sessionMapper.toListFullStateOfSessionResponseDto(stateOfSessions);
     }
 
     @PostMapping("/{session_id}/registration")
     public RegisterBotResponseDto registerBotInSession(@PathVariable("session_id") UUID sessionId,
                                                        @RequestBody RegisterBotRequestDto registerBotRequestDto) {
-        return new RegisterBotResponseDto(sessionService.registerBotInSession(sessionId, registerBotRequestDto.getBotId()));
+        Figure figure = sessionService.registerBotInSession(sessionId, registerBotRequestDto.getBotId());
+        return new RegisterBotResponseDto(figure);
     }
 
     @GetMapping("/{session_id}")
     public StateOfSessionResponseDto getCurrentStateOfSession(@PathVariable("session_id") UUID sessionId) {
-        return sessionMapper.toStateOfSessionResponseDto(sessionService.getCurrentStateOfSession(sessionId));
+        StateOfSession stateOfSession = sessionService.getCurrentStateOfSession(sessionId);
+        return sessionMapper.toStateOfSessionResponseDto(stateOfSession);
     }
 
     @GetMapping("/{session_id}/turns/{turn}")
     public StateOfSessionResponseDto getCurrentStateOfSession(@PathVariable("session_id") UUID sessionId, @PathVariable("turn") Integer turn) {
-        return sessionMapper.toStateOfSessionResponseDto(sessionService.getStateOfSessionByTurn(sessionId, turn));
+        StateOfSession stateOfSession = sessionService.getStateOfSessionByTurn(sessionId, turn);
+        return sessionMapper.toStateOfSessionResponseDto(stateOfSession);
     }
 }
