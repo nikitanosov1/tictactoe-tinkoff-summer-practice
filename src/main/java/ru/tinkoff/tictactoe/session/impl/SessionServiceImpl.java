@@ -2,11 +2,7 @@ package ru.tinkoff.tictactoe.session.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.tictactoe.session.Figure;
-import ru.tinkoff.tictactoe.session.Session;
-import ru.tinkoff.tictactoe.session.SessionService;
-import ru.tinkoff.tictactoe.session.StateOfSession;
-import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntityRepository;
+import ru.tinkoff.tictactoe.session.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +10,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
-    private final SessionEntityRepository sessionEntityRepository;
+    private final SessionRepository sessionRepository;
 
     @Override
     public Session createSession() {
