@@ -2,8 +2,8 @@ package ru.tinkoff.tictactoe.session.controller;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.tinkoff.tictactoe.session.Session;
-import ru.tinkoff.tictactoe.session.StateOfSession;
+import ru.tinkoff.tictactoe.session.model.Session;
+import ru.tinkoff.tictactoe.turn.model.StateOfSession;
 
 import java.util.List;
 

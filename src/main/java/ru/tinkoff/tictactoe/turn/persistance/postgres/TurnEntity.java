@@ -24,7 +24,7 @@ public class TurnEntity {
     private Integer turn;
 
     @Column(name = "game_field")
-    private Boolean gameField;
+    private String gameField;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

@@ -1,4 +1,4 @@
-package ru.tinkoff.tictactoe.session;
+package ru.tinkoff.tictactoe.turn.model;
 
 import lombok.*;
 

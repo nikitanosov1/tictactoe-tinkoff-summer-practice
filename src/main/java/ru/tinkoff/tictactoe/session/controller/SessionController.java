@@ -3,9 +3,9 @@ package ru.tinkoff.tictactoe.session.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.tictactoe.session.Figure;
-import ru.tinkoff.tictactoe.session.Session;
+import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.session.SessionService;
-import ru.tinkoff.tictactoe.session.StateOfSession;
+import ru.tinkoff.tictactoe.turn.model.StateOfSession;
 
 import java.util.List;
 import java.util.UUID;

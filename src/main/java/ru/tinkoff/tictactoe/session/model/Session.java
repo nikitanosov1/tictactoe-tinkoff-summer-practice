@@ -1,4 +1,4 @@
-package ru.tinkoff.tictactoe.session;
+package ru.tinkoff.tictactoe.session.model;
 
 import lombok.*;
 import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntity;

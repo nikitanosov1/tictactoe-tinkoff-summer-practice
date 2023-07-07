@@ -29,9 +29,6 @@ public class SessionEntity {
     @Column(name = "second_bot_id")
     private UUID secondBotId;
 
-    @Column(name = "total_turns")
-    private Integer totalTurns;
-
     @OneToMany(mappedBy = "sessionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TurnEntity> turnEntities = new ArrayList<>();
 

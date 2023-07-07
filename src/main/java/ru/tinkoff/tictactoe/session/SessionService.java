@@ -1,5 +1,8 @@
 package ru.tinkoff.tictactoe.session;
 
+import ru.tinkoff.tictactoe.session.model.Session;
+import ru.tinkoff.tictactoe.turn.model.StateOfSession;
+
 import java.util.List;
 import java.util.UUID;
 
