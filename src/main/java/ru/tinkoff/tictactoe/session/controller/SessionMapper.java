@@ -8,7 +8,7 @@ import ru.tinkoff.tictactoe.turn.model.StateOfSession;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface SessionMapper {
+interface SessionMapper {
 
     @Mapping(source = "id", target = "sessionId")
     CreateSessionResponseDto toCreateSessionResponseDto(Session session);
