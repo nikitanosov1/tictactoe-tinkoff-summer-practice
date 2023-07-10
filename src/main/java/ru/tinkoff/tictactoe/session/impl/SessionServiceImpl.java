@@ -2,7 +2,10 @@ package ru.tinkoff.tictactoe.session.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.tictactoe.session.*;
+import ru.tinkoff.tictactoe.session.exception.ApiError;
+import ru.tinkoff.tictactoe.session.exception.ApiException;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.turn.model.StateOfSession;
 
@@ -19,9 +22,18 @@ public class SessionServiceImpl implements SessionService {
         return sessionRepository.createSession();
     }
 
+    @Transactional
     @Override
     public Figure registerBotInSession(UUID sessionId, UUID botId) {
-        // TODO: реализовать регистрацию бота в сессии
+        Session session = sessionRepository.findBySessionId(sessionId);
+        if (session.getFirstBotId() == null) {
+            sessionRepository.setFirstBotId(session.getId(), botId);
+            return Figure.CROSS;
+        }
+        if (session.getSecondBotId() != null) {
+            throw new ApiException(ApiError.SESSION_IS_ALREADY_FULL);
+        }
+        sessionRepository.setSecondBotId(session.getId(), botId);
         return Figure.ZERO;
     }
 
