@@ -13,11 +13,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
+    private final SessionEntityMapper sessionEntityMapper;
 
     @Override
     public Session createSession() {
-        // TODO: реализовать создание сессии
-        return null;
+        return sessionEntityMapper.toSession(sessionRepository.createSessionEntity());
     }
 
     @Override

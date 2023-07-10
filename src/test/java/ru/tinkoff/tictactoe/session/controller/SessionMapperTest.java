@@ -7,7 +7,7 @@
 //
 //import java.util.UUID;
 //
-//class SessionEntityMapperTest {
+//class SessionMapperTest {
 //    private final SessionMapper sessionMapper = Mappers.getMapper(SessionMapper.class);
 //
 //    @Test
