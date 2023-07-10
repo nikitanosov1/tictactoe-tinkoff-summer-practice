@@ -1,7 +1,7 @@
 package ru.tinkoff.tictactoe.session;
 
-import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntity;
+import ru.tinkoff.tictactoe.session.model.Session;
 
 public interface SessionRepository {
-    SessionEntity createSessionEntity();
+    Session createSession();
 }

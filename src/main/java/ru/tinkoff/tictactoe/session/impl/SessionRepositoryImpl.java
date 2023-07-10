@@ -3,6 +3,7 @@ package ru.tinkoff.tictactoe.session.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.tinkoff.tictactoe.session.SessionRepository;
+import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntity;
 import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntityRepository;
 
@@ -10,12 +11,13 @@ import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntityRepository
 @AllArgsConstructor
 public class SessionRepositoryImpl implements SessionRepository {
     private final SessionEntityRepository sessionEntityRepository;
+    private final SessionEntityMapper sessionEntityMapper;
 
     @Override
-    public SessionEntity createSessionEntity() {
+    public Session createSession() {
         SessionEntity sessionEntity = SessionEntity.builder()
                 .isActive(false)
                 .build();
-        return sessionEntityRepository.save(sessionEntity);
+        return sessionEntityMapper.toSession(sessionEntityRepository.save(sessionEntity));
     }
 }
