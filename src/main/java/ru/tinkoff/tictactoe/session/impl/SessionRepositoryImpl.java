@@ -2,9 +2,8 @@ package ru.tinkoff.tictactoe.session.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.tinkoff.tictactoe.session.exception.ApiError;
 import ru.tinkoff.tictactoe.session.SessionRepository;
-import ru.tinkoff.tictactoe.session.exception.ApiException;
+import ru.tinkoff.tictactoe.session.exception.SessionNotFoundException;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntity;
 import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntityRepository;
@@ -29,7 +28,7 @@ public class SessionRepositoryImpl implements SessionRepository {
     public Session findBySessionId(UUID sessionId) {
         return sessionEntityRepository.findById(sessionId)
                 .map(sessionEntityMapper::toSession)
-                .orElseThrow(() -> new ApiException(ApiError.SESSION_NOT_FOUND));
+                .orElseThrow(SessionNotFoundException::new);
     }
 
     @Override

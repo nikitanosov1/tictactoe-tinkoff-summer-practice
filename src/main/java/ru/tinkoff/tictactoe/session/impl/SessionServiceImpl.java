@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.tictactoe.session.*;
-import ru.tinkoff.tictactoe.session.exception.ApiError;
-import ru.tinkoff.tictactoe.session.exception.ApiException;
+import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.turn.model.StateOfSession;
 
@@ -31,7 +30,7 @@ public class SessionServiceImpl implements SessionService {
             return Figure.CROSS;
         }
         if (session.getSecondBotId() != null) {
-            throw new ApiException(ApiError.SESSION_IS_ALREADY_FULL);
+            throw new SessionIsAlreadyFullException();
         }
         sessionRepository.setSecondBotId(session.getId(), botId);
         return Figure.ZERO;

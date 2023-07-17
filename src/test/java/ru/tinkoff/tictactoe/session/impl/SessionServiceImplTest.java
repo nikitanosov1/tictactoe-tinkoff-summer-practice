@@ -1,6 +1,5 @@
 package ru.tinkoff.tictactoe.session.impl;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -11,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.tinkoff.tictactoe.session.Figure;
 import ru.tinkoff.tictactoe.session.SessionRepository;
-import ru.tinkoff.tictactoe.session.exception.ApiException;
+import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
 
 import java.util.Date;
@@ -102,7 +101,7 @@ class SessionServiceImplTest {
                 .turnEntities(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
-        assertThrows(ApiException.class, () -> {
+        assertThrows(SessionIsAlreadyFullException.class, () -> {
             sessionService.registerBotInSession(sessionId, secondBotId);
         });
     }
