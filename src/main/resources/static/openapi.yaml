@@ -56,8 +56,8 @@ paths:
         '400':
           description: Некорректный запрос
 
-  /sessions/{session_id}:
-    put:
+  /sessions/{session_id}/registration:
+    post:
       tags:
         - sessions
       summary: Зарегистрировать бота в игровой сессии
@@ -185,13 +185,9 @@ components:
       type: object
       properties:
         bot_id:
-          type: integer
-          format: int64
-          example: 223
-        session_id:
           type: string
           format: UUID
-          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+          example: "h58ed332-928c-4155-bee9-fdbaaadc15f3"
     RegisterBotInSessionResponse:
       type: object
       properties:
@@ -224,6 +220,10 @@ components:
           type: string
           format: timestamp
           example: "2020-04-08T07:30:10Z"
+        turn:
+          type: integer
+          format: int64
+          example: 6
     FullSessionStateResponse:
       type: object
       properties:
@@ -232,13 +232,13 @@ components:
           format: UUID
           example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
         first_bot_id:
-          type: integer
-          format: int64
-          example: 223
+          type: string
+          format: UUID
+          example: "555ed763-928c-4155-bee9-fdbaaadc15f3"
         second_bot_id:
-          type: integer
-          format: int64
-          example: 563
+          type: string
+          format: UUID
+          example: "888ed763-928c-4155-bee9-fdbaaadc15f3"
         total_turns:
           type: integer
           format: int64
@@ -259,3 +259,7 @@ components:
           type: string
           format: Игровое поле свернутое в одну строку построчно (длиной 361 символов)
           example: "_oo___oo_xoxo__xoo_o_oxx_oo_x______o_______x___oo_x_x_o_x_______oxo___o_x__o_o______x__o_____x__o_____o______x_____xoxoo___xo_____o__x_x__________x__x____o_xo__x__o___x_______o_x______xo______oxo_x_xx__xox___ox____x_oo__ox_x_x___o__________x______________o_____x____o___x___xo___x__x_xo__x_x___ox___x_______x____x_o_x__x_o__ox__o__x__ox_x_____x_oo_____x____o_ox"
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/nikitanosov1/mediator/1.0.0
