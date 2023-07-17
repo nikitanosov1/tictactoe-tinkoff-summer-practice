@@ -6,13 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface SessionEntityRepository extends JpaRepository<SessionEntity, UUID> {
-    Optional<SessionEntity> findById(UUID uuid);
-
     @Modifying
     @Query("update SessionEntity s set s.firstBotId = :botId where s.id = :sessionId")
     void updateSessionEntitySetFirstBotId(@Param("sessionId") UUID sessionId,
