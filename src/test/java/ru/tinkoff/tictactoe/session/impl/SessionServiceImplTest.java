@@ -36,7 +36,7 @@ class SessionServiceImplTest {
                 .isActive(false)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.createSession()).thenReturn(session);
         Session returnedSession = sessionService.createSession();
@@ -55,7 +55,7 @@ class SessionServiceImplTest {
                 .isActive(false)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
         Figure figure = sessionService.registerBotInSession(sessionId, firstBotId);
@@ -76,7 +76,7 @@ class SessionServiceImplTest {
                 .firstBotId(firstBotId)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
         Figure figure = sessionService.registerBotInSession(sessionId, secondBotId);
@@ -98,7 +98,7 @@ class SessionServiceImplTest {
                 .secondBotId(secondBotId)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
         assertThrows(SessionIsAlreadyFullException.class, () -> {

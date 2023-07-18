@@ -1,12 +1,14 @@
 spring:
+  application:
+    name: tictactoe
   datasource:
-    url: jdbc:postgresql://localhost:5432/tictactoe
-    username: postgres
-    password: 1608
-    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432}/${DATABASE_NAME:tictactoe}?currentSchema=${DATABASE_SCHEMA:public}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:1608}
+    driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create}
     show-sql: true
     properties:
       hibernate:
@@ -20,3 +22,13 @@ spring:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
+
+bots:
+  url: http://${BOTS_HOST:localhost}:${BOTS_PORT:8081}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout=5000
+        readTimeout=5000

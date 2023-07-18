@@ -33,12 +33,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.postgresql:postgresql:42.5.1'
+    implementation 'org.springframework.cloud:spring-cloud-dependencies:2022.0.3'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.3'
+
 
     // from https://github.com/mapstruct/mapstruct-examples/blob/main/mapstruct-lombok/build.gradle
     implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
-    testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+    testImplementation 'com.github.tomakehurst:wiremock-jre8-standalone:2.35.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

@@ -3,7 +3,10 @@ package ru.tinkoff.tictactoe.session.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.tinkoff.tictactoe.session.*;
+import ru.tinkoff.tictactoe.session.Figure;
+import ru.tinkoff.tictactoe.session.GameService;
+import ru.tinkoff.tictactoe.session.SessionRepository;
+import ru.tinkoff.tictactoe.session.SessionService;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.turn.model.StateOfSession;
@@ -15,6 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
+    private final GameService gameService;
 
     @Override
     public Session createSession() {
@@ -33,6 +37,7 @@ public class SessionServiceImpl implements SessionService {
             throw new SessionIsAlreadyFullException();
         }
         sessionRepository.setSecondBotId(session.getId(), botId);
+        gameService.startGame(session.getId());
         return Figure.ZERO;
     }
 
