@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.tinkoff.tictactoe.session.Figure;
+import ru.tinkoff.tictactoe.session.GameService;
 import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
@@ -24,6 +25,9 @@ import static org.mockito.Mockito.*;
 class SessionServiceImplTest {
     @Mock
     private SessionRepository sessionRepositoryMock;
+
+    @Mock
+    private GameService gameServiceMock;
 
     @InjectMocks
     private SessionServiceImpl sessionService;
@@ -79,6 +83,7 @@ class SessionServiceImplTest {
                 .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
+        when(gameServiceMock.startGame(sessionId)).thenReturn(null);
         Figure figure = sessionService.registerBotInSession(sessionId, secondBotId);
         verify(sessionRepositoryMock, times(1)).findBySessionId(sessionId);
         assertThat(figure)

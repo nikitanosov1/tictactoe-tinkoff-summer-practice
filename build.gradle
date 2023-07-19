@@ -25,6 +25,7 @@ ext {
     mapstructVersion = "1.5.5.Final"
     lombokVersion = "1.18.20"
     lombokMapstructBindingVersion = "0.2.0"
+    set('testcontainersVersion', "1.18.0")
 }
 
 dependencies {
@@ -43,6 +44,8 @@ dependencies {
 
     testImplementation 'com.github.tomakehurst:wiremock-jre8-standalone:2.35.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
 }
 
 tasks.named('test') {

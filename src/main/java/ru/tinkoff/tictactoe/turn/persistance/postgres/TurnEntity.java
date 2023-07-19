@@ -23,7 +23,7 @@ public class TurnEntity {
     @Column(name = "turn")
     private Integer turn;
 
-    @Column(name = "game_field")
+    @Column(name = "game_field", length = 361)
     private String gameField;
 
     @CreationTimestamp
