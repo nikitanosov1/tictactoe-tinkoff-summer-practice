@@ -1,4 +1,4 @@
-package ru.tinkoff.tictactoe.session;
+package ru.tinkoff.tictactoe.integration.test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
@@ -11,6 +11,9 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
+import ru.tinkoff.tictactoe.integration.IntegrationSettings;
+import ru.tinkoff.tictactoe.session.GameService;
+import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntityRepository;
 import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntityRepository;
@@ -22,40 +25,10 @@ import java.util.concurrent.ExecutionException;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @WireMockTest(httpPort = 8081)
-class GameServiceTest {
-    //    @Value("${bots.host}")
-//    String BOTS_HOST;
-//
-//    @Value("${bots.port}")
-//    Integer BOTS_PORT;
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            "postgres:15-alpine"
-    );
-
-    @BeforeAll
-    static void beforeAll() {
-        postgres.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
-
+class GameServiceTest extends IntegrationSettings {
     @Autowired
     private GameService gameService;
-
-    @Autowired
-    private SessionService sessionService;
 
     @Autowired
     private SessionRepository sessionRepository;
