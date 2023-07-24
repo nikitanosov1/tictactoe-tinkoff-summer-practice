@@ -35,15 +35,11 @@ public class GameServiceImpl implements GameService {
         UUID defendingBotId = session.getSecondBotId();
 
 
-        while (true) {
+        while (isBothBotsAlive(session, 2)) {
             int currTurn = session.getTurns().size();
             log.info("In session {} the turn {} has begun with attackingBotId {} and defendingBotId {}", sessionId, currTurn, attackingBotId, defendingBotId);
             Figure attackingBotFigure = (currTurn % 2 == 0) ? Figure.ZERO : Figure.CROSS;
             String currGameField = session.getTurns().get(currTurn - 1).getGameField();
-
-            if (!isBothBotsAlive(session)) {
-                break;
-            }
 
             Turn newTurn = Turn.builder()
                     .gameField(currGameField)
@@ -93,14 +89,14 @@ public class GameServiceImpl implements GameService {
         return CompletableFuture.completedFuture(session);
     }
 
-    public boolean isBothBotsAlive(Session session) {
+    public boolean isBothBotsAlive(Session session, int steps) {
         int turns = session.getTurns().size();
         if (turns < 3) {
             return true;
         }
-        String prevGameField = session.getTurns().get(turns - 3).getGameField();
+        String prevGameField = session.getTurns().get(turns - 1 - steps).getGameField();
         String currGameField = session.getTurns().get(turns - 1).getGameField();
-        // Если игровое поле не меняется два хода подряд, значит боты не живы
+        // Если игровое поле не меняется steps ходов подряд, значит боты не живы
         return !prevGameField.equals(currGameField);
     }
 }
