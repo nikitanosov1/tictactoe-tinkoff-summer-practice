@@ -2,21 +2,12 @@ package ru.tinkoff.tictactoe.integration.test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
 import ru.tinkoff.tictactoe.integration.IntegrationSettings;
 import ru.tinkoff.tictactoe.session.GameService;
 import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.model.Session;
-import ru.tinkoff.tictactoe.session.persistance.postgres.SessionEntityRepository;
-import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntityRepository;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
