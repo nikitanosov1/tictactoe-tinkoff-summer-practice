@@ -6,6 +6,7 @@ import ru.tinkoff.tictactoe.gamechecker.GameChecker;
 import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
 import ru.tinkoff.tictactoe.gamechecker.WinCheckerResults;
 import ru.tinkoff.tictactoe.gamechecker.WinChecker;
+import ru.tinkoff.tictactoe.gamechecker.exception.UnsupportedFigureException;
 import ru.tinkoff.tictactoe.session.Figure;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class GameCheckerImpl implements GameChecker {
     @Override
     public WinCheckerResults isWin(String gameField, Figure figure) {
         if (!figure.equals(Figure.CROSS) && !figure.equals(Figure.ZERO)) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedFigureException();
         }
         for (WinChecker winChecker : winCheckers) {
             WinCheckerResults winCheckerResults = winChecker.check(gameField, figure);
@@ -41,7 +42,7 @@ public class GameCheckerImpl implements GameChecker {
     @Override
     public ValidCheckerResults isValidTurn(String currGameField, String newGameField, Figure figure) {
         if (!figure.equals(Figure.CROSS) && !figure.equals(Figure.ZERO)) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedFigureException();
         }
         if (newGameField == null || newGameField.length() != 19 * 19) {
             return ValidCheckerResults.builder().isValid(false).build();
