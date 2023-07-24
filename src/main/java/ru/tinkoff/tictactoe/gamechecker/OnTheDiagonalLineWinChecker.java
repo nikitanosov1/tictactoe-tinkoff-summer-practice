@@ -22,9 +22,7 @@ public class OnTheDiagonalLineWinChecker implements WinChecker {
      */
     @Override
     public WinCheckerResults check(String gameField, Figure figure) {
-        WinCheckerResults results = WinCheckerResults.builder()
-                .isWin(false)
-                .build();
+        WinCheckerResults results = new WinCheckerResults();
         int count;
         for (int i = -14; i < 15; i++) {
             int col = Math.max(i, 0);
@@ -51,6 +49,7 @@ public class OnTheDiagonalLineWinChecker implements WinChecker {
                 ++row;
             }
         }
+        results.setIsWin(false);
         return results;
     }
 }
