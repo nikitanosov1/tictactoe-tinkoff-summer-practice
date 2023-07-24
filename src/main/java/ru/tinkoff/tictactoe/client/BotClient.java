@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.UUID;
 
-@FeignClient(name = "botClient", url = "http://localhost:8081")
+@FeignClient(name = "botClient", url = "${botClient.ribbon.listOfServers}")
 public interface BotClient {
 
     @PostMapping("/bot/turn/{botId}")

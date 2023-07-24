@@ -23,8 +23,9 @@ spring:
       max-file-size: 2MB
       max-request-size: 2MB
 
-bots:
-  url: http://${BOTS_HOST:localhost}:${BOTS_PORT:8081}
+botClient:
+  ribbon:
+    listOfServers: localhost:8081
 
 feign:
   client:
