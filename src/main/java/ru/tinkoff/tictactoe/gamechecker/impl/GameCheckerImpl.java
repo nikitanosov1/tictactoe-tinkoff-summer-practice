@@ -29,7 +29,7 @@ public class GameCheckerImpl implements GameChecker {
         }
         for (WinChecker winChecker : winCheckers) {
             WinCheckerResults winCheckerResults = winChecker.check(gameField, figure);
-            if (winCheckerResults.getIsWin()) {
+            if (Boolean.TRUE.equals(winCheckerResults.getIsWin())) {
                 return winCheckerResults;
             }
         }
