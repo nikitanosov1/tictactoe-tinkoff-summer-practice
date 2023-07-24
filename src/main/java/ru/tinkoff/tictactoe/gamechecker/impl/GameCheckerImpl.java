@@ -2,10 +2,7 @@ package ru.tinkoff.tictactoe.gamechecker.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.tictactoe.gamechecker.GameChecker;
-import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
-import ru.tinkoff.tictactoe.gamechecker.WinCheckerResults;
-import ru.tinkoff.tictactoe.gamechecker.WinChecker;
+import ru.tinkoff.tictactoe.gamechecker.*;
 import ru.tinkoff.tictactoe.gamechecker.exception.UnsupportedFigureException;
 import ru.tinkoff.tictactoe.session.Figure;
 
@@ -15,6 +12,7 @@ import java.util.List;
 @Service
 public class GameCheckerImpl implements GameChecker {
     private final List<? extends WinChecker> winCheckers;
+    private final List<? extends ValidChecker> validCheckers;
 
     /**
      * Searches for 5 consecutive figures
@@ -44,25 +42,14 @@ public class GameCheckerImpl implements GameChecker {
         if (!figure.equals(Figure.CROSS) && !figure.equals(Figure.ZERO)) {
             throw new UnsupportedFigureException();
         }
-        if (newGameField == null || newGameField.length() != 19 * 19) {
-            return ValidCheckerResults.builder().isValid(false).build();
-        }
-
-        int countDiffFigures = 0;
-        for (int i = 0; i < newGameField.length(); i++) {
-            Figure currFigure = Figure.fromString(String.valueOf(currGameField.charAt(i)));
-            Figure newFigure = Figure.fromString(String.valueOf(newGameField.charAt(i)));
-            if (currFigure.equals(Figure.EMPTY) && newFigure.equals(figure)) {
-                ++countDiffFigures;
-                continue;
-            }
-            if (!currFigure.equals(newFigure)) {
-                return ValidCheckerResults.builder().isValid(false).build();
+        for (ValidChecker validChecker : validCheckers) {
+            ValidCheckerResults validCheckerResults = validChecker.check(currGameField, newGameField, figure);
+            if (Boolean.FALSE.equals(validCheckerResults.getIsValid())) {
+                return validCheckerResults;
             }
         }
-        if (countDiffFigures != 1) {
-            return ValidCheckerResults.builder().isValid(false).build();
-        }
-        return ValidCheckerResults.builder().isValid(true).build();
+        return ValidCheckerResults.builder()
+                .isValid(true)
+                .build();
     }
 }
