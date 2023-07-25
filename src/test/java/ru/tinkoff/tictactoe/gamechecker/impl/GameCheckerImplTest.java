@@ -1,27 +1,20 @@
 package ru.tinkoff.tictactoe.gamechecker.impl;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
-import ru.tinkoff.tictactoe.gamechecker.WinChecker;
 import ru.tinkoff.tictactoe.session.Figure;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class GameCheckerImplTest {
-    @Mock
-    private List<? extends WinChecker> winCheckers;
-
-    @InjectMocks
+    @Autowired
     private GameCheckerImpl gameChecker;
 
     private static Stream<Arguments> argsForValidTurns() {
