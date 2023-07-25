@@ -27,13 +27,11 @@ public class GameServiceImpl implements GameService {
     private final GameChecker gameChecker;
 
     @Async
-    @Transactional
     public CompletableFuture<Session> startGame(UUID sessionId) {
         log.info("In session {} the game has started", sessionId);
         Session session = sessionRepository.findBySessionId(sessionId);
         UUID attackingBotId = session.getFirstBotId();
         UUID defendingBotId = session.getSecondBotId();
-
 
         while (isBothBotsAlive(session, 2)) {
             int currTurn = session.getTurns().size();
@@ -49,7 +47,6 @@ public class GameServiceImpl implements GameService {
             // Стучим attackingBot, чтобы он сделал ход
             BotResponse attackingBotResponse = botClient.makeTurn(attackingBotId, new BotRequest(currGameField));
             // TODO: Добавить логику на случай, если makeTurn кидает exception
-            log.info("In session {} attackingBotResponse = {}", sessionId, attackingBotResponse);
             String newGameField = attackingBotResponse.getGameField();
             log.info("In session {} newGameField = {}", sessionId, newGameField);
 

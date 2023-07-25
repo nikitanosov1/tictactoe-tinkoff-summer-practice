@@ -41,7 +41,8 @@ public class SessionRepositoryImpl implements SessionRepository {
         sessionEntity.setTurnEntities(List.of(turnEntity));
         return sessionEntityMapper.toSession(sessionEntityRepository.save(sessionEntity));
     }
-
+    
+    @Transactional
     @Override
     public Session findBySessionId(UUID sessionId) {
         return sessionEntityRepository.findById(sessionId)
