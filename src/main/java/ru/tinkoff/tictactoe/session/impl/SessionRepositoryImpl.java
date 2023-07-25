@@ -1,5 +1,7 @@
 package ru.tinkoff.tictactoe.session.impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,10 @@ public class SessionRepositoryImpl implements SessionRepository {
     private final SessionEntityRepository sessionEntityRepository;
     private final TurnEntityRepository turnEntityRepository;
     private final SessionEntityMapper sessionEntityMapper;
-    
+
+    @PersistenceContext
+    private final EntityManager entityManager;
+
     @Transactional
     @Override
     public Session createSession() {
@@ -57,15 +62,13 @@ public class SessionRepositoryImpl implements SessionRepository {
     }
 
     @Override
-    public Session addTurnToSession(UUID sessionId, Turn turn) {
+    public void addTurnToSession(UUID sessionId, Turn turn) {
+        SessionEntity sessionEntity = entityManager.find(SessionEntity.class, sessionId);
         TurnEntity turnEntity = TurnEntity.builder()
                 .turn(turn.getTurn())
                 .gameField(turn.getGameField())
+                .sessionEntity(sessionEntity)
                 .build();
-        SessionEntity sessionEntity = sessionEntityRepository.findById(sessionId)
-                .orElseThrow(RuntimeException::new);
-        turnEntity.setSessionEntity(sessionEntity);
-        sessionEntity.getTurnEntities().add(turnEntity);
-        return sessionEntityMapper.toSession(sessionEntityRepository.save(sessionEntity));
+        turnEntityRepository.save(turnEntity);
     }
 }

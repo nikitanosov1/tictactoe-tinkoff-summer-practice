@@ -35,4 +35,14 @@ public class TurnEntity {
     @JoinColumn(name = "session_entity_id")
     private SessionEntity sessionEntity;
 
+    @Override
+    public String toString() {
+        return "TurnEntity{" +
+                "id=" + id +
+                ", turn=" + turn +
+                ", gameField='" + gameField + '\'' +
+                ", createdAt=" + createdAt +
+                ", sessionEntity=" + sessionEntity +
+                '}';
+    }
 }

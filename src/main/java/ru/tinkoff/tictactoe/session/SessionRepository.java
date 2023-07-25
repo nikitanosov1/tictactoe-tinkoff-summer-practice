@@ -14,5 +14,5 @@ public interface SessionRepository {
 
     void setSecondBotId(UUID sessionId, UUID botId);
 
-    Session addTurnToSession(UUID sessionId, Turn turn);
+    void addTurnToSession(UUID sessionId, Turn turn);
 }
