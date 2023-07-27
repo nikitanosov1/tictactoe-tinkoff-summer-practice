@@ -27,7 +27,6 @@ public class SessionRepositoryImpl implements SessionRepository {
     @PersistenceContext
     private final EntityManager entityManager;
 
-    @Transactional
     @Override
     public Session createSession() {
         SessionEntity sessionEntity = SessionEntity.builder()
@@ -41,7 +40,7 @@ public class SessionRepositoryImpl implements SessionRepository {
         sessionEntity.setTurnEntities(List.of(turnEntity));
         return sessionEntityMapper.toSession(sessionEntityRepository.save(sessionEntity));
     }
-    
+
     @Transactional
     @Override
     public Session findBySessionId(UUID sessionId) {

@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WireMockTest(httpPort = 8081)
 class GameCheckerImplTest extends IntegrationSettings {
     @Autowired
     private GameCheckerImpl gameChecker;
