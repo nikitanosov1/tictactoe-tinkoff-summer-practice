@@ -1,19 +1,21 @@
-package ru.tinkoff.tictactoe.gamechecker.impl;
+package ru.tinkoff.tictactoe.integration.test;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
+import ru.tinkoff.tictactoe.gamechecker.impl.GameCheckerImpl;
+import ru.tinkoff.tictactoe.integration.IntegrationSettings;
 import ru.tinkoff.tictactoe.session.Figure;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class GameCheckerImplTest {
+@WireMockTest(httpPort = 8081)
+class GameCheckerImplTest extends IntegrationSettings {
     @Autowired
     private GameCheckerImpl gameChecker;
 
