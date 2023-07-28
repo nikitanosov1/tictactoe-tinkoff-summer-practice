@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.tinkoff.tictactoe.session.Figure;
 
 @Component
-@Order(2)
+@Order(10)
 public class OneFigureChangedValidChecker implements ValidChecker {
     @Override
     public ValidCheckerResults check(String currGameField, String newGameField, Figure figure) {
