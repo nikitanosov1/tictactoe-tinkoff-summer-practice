@@ -29,7 +29,7 @@ public class SessionEntity {
     @Column(name = "second_bot_id")
     private UUID secondBotId;
 
-    @OneToMany(mappedBy = "sessionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sessionEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<TurnEntity> turnEntities = new ArrayList<>();
 
     @Column(name = "is_active")

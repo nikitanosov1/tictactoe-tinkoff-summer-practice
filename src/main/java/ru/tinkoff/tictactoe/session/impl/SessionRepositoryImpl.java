@@ -41,7 +41,6 @@ public class SessionRepositoryImpl implements SessionRepository {
         return sessionEntityMapper.toSession(sessionEntityRepository.save(sessionEntity));
     }
 
-    @Transactional
     @Override
     public Session findBySessionId(UUID sessionId) {
         return sessionEntityRepository.findById(sessionId)
@@ -63,11 +62,10 @@ public class SessionRepositoryImpl implements SessionRepository {
 
     @Override
     public void addTurnToSession(UUID sessionId, Turn turn) {
-        SessionEntity sessionEntity = entityManager.find(SessionEntity.class, sessionId);
         TurnEntity turnEntity = TurnEntity.builder()
                 .turn(turn.getTurn())
                 .gameField(turn.getGameField())
-                .sessionEntity(sessionEntity)
+                .sessionEntity(entityManager.getReference(SessionEntity.class, sessionId))
                 .build();
         turnEntityRepository.save(turnEntity);
     }

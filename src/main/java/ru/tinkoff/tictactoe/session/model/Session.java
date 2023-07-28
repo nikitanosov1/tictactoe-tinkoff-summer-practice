@@ -20,4 +20,17 @@ public class Session {
     private Boolean isActive;
     private Date updatedAt;
     private Date createdAt;
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "id=" + id +
+                ", firstBotId=" + firstBotId +
+                ", secondBotId=" + secondBotId +
+                ", turns=" + turns +
+                ", isActive=" + isActive +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

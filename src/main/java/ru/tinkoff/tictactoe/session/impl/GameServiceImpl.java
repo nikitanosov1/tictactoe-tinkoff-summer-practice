@@ -25,7 +25,7 @@ public class GameServiceImpl implements GameService {
     private final SessionRepository sessionRepository;
     private final BotClient botClient;
     private final GameChecker gameChecker;
-
+    
     @Async
     public CompletableFuture<Session> startGame(UUID sessionId) {
         log.info("In session {} the game has started", sessionId);

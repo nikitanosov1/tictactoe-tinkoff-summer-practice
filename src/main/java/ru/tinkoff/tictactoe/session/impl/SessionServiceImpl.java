@@ -20,6 +20,7 @@ public class SessionServiceImpl implements SessionService {
     private final SessionRepository sessionRepository;
     private final GameService gameService;
 
+    @Transactional
     @Override
     public Session createSession() {
         return sessionRepository.createSession();

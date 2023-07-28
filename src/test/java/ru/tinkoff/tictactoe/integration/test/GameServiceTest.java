@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.tictactoe.integration.IntegrationSettings;
 import ru.tinkoff.tictactoe.session.GameService;
 import ru.tinkoff.tictactoe.session.SessionRepository;
+import ru.tinkoff.tictactoe.session.SessionService;
 import ru.tinkoff.tictactoe.session.model.Session;
 
 import java.util.UUID;
@@ -23,6 +24,9 @@ class GameServiceTest extends IntegrationSettings {
 
     @Autowired
     private SessionRepository sessionRepository;
+
+    @Autowired
+    private SessionService sessionService;
 
     @Test
     void tempName() throws ExecutionException, InterruptedException {
@@ -444,7 +448,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "\"}")));
         // TODO: вопросик тут есть
-        Session session = sessionRepository.createSession();
+        Session session = sessionService.createSession();
         sessionRepository.setFirstBotId(session.getId(), firstBotId);
         sessionRepository.setSecondBotId(session.getId(), secondBotId);
         CompletableFuture<Session> result = gameService.startGame(session.getId());
