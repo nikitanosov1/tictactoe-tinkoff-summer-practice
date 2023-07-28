@@ -10,6 +10,9 @@ import org.testcontainers.junit.jupiter.Container;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class IntegrationSettings {
+    /*
+    https://github.com/testcontainers/testcontainers-java/tree/main/examples/singleton-container/src/test/java/com/example
+     */
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
             "postgres:15-alpine"
