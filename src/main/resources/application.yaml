@@ -33,3 +33,5 @@ feign:
       default:
         connectTimeout=5000
         readTimeout=5000
+bots:
+  step-for-bots-alive: 2

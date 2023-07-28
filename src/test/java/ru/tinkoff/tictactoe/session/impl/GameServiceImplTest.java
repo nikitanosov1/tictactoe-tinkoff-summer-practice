@@ -1,5 +1,7 @@
 package ru.tinkoff.tictactoe.session.impl;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +44,11 @@ class GameServiceImplTest {
 
     @InjectMocks
     private GameServiceImpl gameService;
+
+    @BeforeEach
+    public void before() throws Exception {
+        FieldUtils.writeField(gameService, "steps", 2, true);
+    }
 
     @Test
     void givenSessionId_whenStartGame_thenReturnSessionWithNewTurns() throws ExecutionException, InterruptedException {

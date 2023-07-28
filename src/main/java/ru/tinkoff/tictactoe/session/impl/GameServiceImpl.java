@@ -2,16 +2,18 @@ package ru.tinkoff.tictactoe.session.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.tictactoe.client.BotClient;
 import ru.tinkoff.tictactoe.client.BotRequest;
 import ru.tinkoff.tictactoe.client.BotResponse;
 import ru.tinkoff.tictactoe.gamechecker.GameChecker;
 import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
 import ru.tinkoff.tictactoe.gamechecker.WinCheckerResults;
-import ru.tinkoff.tictactoe.session.*;
+import ru.tinkoff.tictactoe.session.Figure;
+import ru.tinkoff.tictactoe.session.GameService;
+import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.turn.model.Turn;
 
@@ -25,15 +27,18 @@ public class GameServiceImpl implements GameService {
     private final SessionRepository sessionRepository;
     private final BotClient botClient;
     private final GameChecker gameChecker;
-    
+
+    @Value("${bots.step-for-bots-alive}")
+    private int steps;
+
     @Async
     public CompletableFuture<Session> startGame(UUID sessionId) {
-        log.info("In session {} the game has started", sessionId);
+        log.info("In session {} the game has started {}", sessionId, steps);
         Session session = sessionRepository.findBySessionId(sessionId);
         UUID attackingBotId = session.getFirstBotId();
         UUID defendingBotId = session.getSecondBotId();
 
-        while (isBothBotsAlive(session, 2)) {
+        while (isBothBotsAlive(session, steps)) {
             int currTurn = session.getTurns().size();
             log.info("In session {} the turn {} has begun with attackingBotId {} and defendingBotId {}", sessionId, currTurn, attackingBotId, defendingBotId);
             Figure attackingBotFigure = (currTurn % 2 == 0) ? Figure.ZERO : Figure.CROSS;
