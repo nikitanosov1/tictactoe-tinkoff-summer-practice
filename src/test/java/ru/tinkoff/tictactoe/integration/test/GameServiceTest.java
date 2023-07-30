@@ -27,7 +27,7 @@ class GameServiceTest extends IntegrationSettings {
     private SessionService sessionService;
 
     @Test
-    void tempName() throws ExecutionException, InterruptedException {
+    void givenSessionWithTwoBots_whenStartGame_thenNewSessionHas10Turns() throws ExecutionException, InterruptedException {
         UUID firstBotId = UUID.randomUUID();
         UUID secondBotId = UUID.randomUUID();
         wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
