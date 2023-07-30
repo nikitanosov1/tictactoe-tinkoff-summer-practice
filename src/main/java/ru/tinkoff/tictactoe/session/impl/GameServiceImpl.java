@@ -33,7 +33,7 @@ public class GameServiceImpl implements GameService {
 
     @Async
     public CompletableFuture<Session> startGame(UUID sessionId) {
-        log.info("In session {} the game has started {}", sessionId, steps);
+        log.info("In session {} the game has started", sessionId);
         Session session = sessionRepository.findBySessionId(sessionId);
         UUID attackingBotId = session.getFirstBotId();
         UUID defendingBotId = session.getSecondBotId();
