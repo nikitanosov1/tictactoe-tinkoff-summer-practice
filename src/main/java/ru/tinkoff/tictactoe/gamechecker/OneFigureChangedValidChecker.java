@@ -2,13 +2,15 @@ package ru.tinkoff.tictactoe.gamechecker;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import ru.tinkoff.tictactoe.gamechecker.exception.CellChangedIncorrectlyInTurnException;
+import ru.tinkoff.tictactoe.gamechecker.exception.NotOneFigureChangedException;
 import ru.tinkoff.tictactoe.session.Figure;
 
 @Component
 @Order(10)
 public class OneFigureChangedValidChecker implements ValidChecker {
     @Override
-    public ValidCheckerResults check(String currGameField, String newGameField, Figure figure) {
+    public void validate(String currGameField, String newGameField, Figure figure) {
         int countDiffFigures = 0;
         for (int i = 0; i < newGameField.length(); i++) {
             Figure currFigure = Figure.fromString(String.valueOf(currGameField.charAt(i)));
@@ -18,12 +20,11 @@ public class OneFigureChangedValidChecker implements ValidChecker {
                 continue;
             }
             if (!currFigure.equals(newFigure)) {
-                return ValidCheckerResults.builder().isValid(false).build();
+                throw new CellChangedIncorrectlyInTurnException();
             }
         }
         if (countDiffFigures != 1) {
-            return ValidCheckerResults.builder().isValid(false).build();
+            throw new NotOneFigureChangedException();
         }
-        return ValidCheckerResults.builder().isValid(true).build();
     }
 }

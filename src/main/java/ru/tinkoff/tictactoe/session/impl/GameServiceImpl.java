@@ -9,8 +9,8 @@ import ru.tinkoff.tictactoe.client.BotClient;
 import ru.tinkoff.tictactoe.client.BotRequest;
 import ru.tinkoff.tictactoe.client.BotResponse;
 import ru.tinkoff.tictactoe.gamechecker.GameChecker;
-import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
 import ru.tinkoff.tictactoe.gamechecker.WinCheckerResults;
+import ru.tinkoff.tictactoe.gamechecker.exception.ValidCheckerException;
 import ru.tinkoff.tictactoe.session.Figure;
 import ru.tinkoff.tictactoe.session.GameService;
 import ru.tinkoff.tictactoe.session.SessionRepository;
@@ -56,10 +56,10 @@ public class GameServiceImpl implements GameService {
             log.info("In session {} newGameField = {}", sessionId, newGameField);
 
             // Проверяем, что в поле изменилось именно одно поле с символа _ на символ attackingBotFigure
-            ValidCheckerResults validCheckerResults = gameChecker.isValidTurn(currGameField, newGameField, attackingBotFigure);
-            if (Boolean.TRUE.equals(validCheckerResults.getIsValid())) {
+            try {
+                gameChecker.validate(currGameField, newGameField, attackingBotFigure);
                 newTurn.setGameField(newGameField);
-            } else {
+            } catch (ValidCheckerException e) {
                 // Если бот ответил невалидным полем, то не меняем поле и передаем ход другому боту
                 session.getTurns().add(newTurn);
                 sessionRepository.addTurnToSession(session.getId(), newTurn);

@@ -13,7 +13,6 @@ import ru.tinkoff.tictactoe.client.BotClient;
 import ru.tinkoff.tictactoe.client.BotRequest;
 import ru.tinkoff.tictactoe.client.BotResponse;
 import ru.tinkoff.tictactoe.gamechecker.GameChecker;
-import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
 import ru.tinkoff.tictactoe.gamechecker.WinCheckerResults;
 import ru.tinkoff.tictactoe.session.Figure;
 import ru.tinkoff.tictactoe.session.SessionRepository;
@@ -89,8 +88,6 @@ class GameServiceImplTest {
         when(botClient.makeTurn(firstBotId, new BotRequest(turnGameField6))).thenReturn(new BotResponse(turnGameField7));
         when(botClient.makeTurn(secondBotId, new BotRequest(turnGameField7))).thenReturn(new BotResponse(turnGameField8));
         when(botClient.makeTurn(firstBotId, new BotRequest(turnGameField8))).thenReturn(new BotResponse(turnGameField9));
-
-        when(gameChecker.isValidTurn(any(), any(), any())).thenReturn(ValidCheckerResults.builder().isValid(true).build());
 
         when(gameChecker.isWin(turnGameField1, Figure.CROSS)).thenReturn(WinCheckerResults.builder().isWin(false).build());
         when(gameChecker.isWin(turnGameField2, Figure.ZERO)).thenReturn(WinCheckerResults.builder().isWin(false).build());

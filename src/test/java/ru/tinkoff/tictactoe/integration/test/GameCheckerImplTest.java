@@ -1,18 +1,21 @@
 package ru.tinkoff.tictactoe.integration.test;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.tinkoff.tictactoe.gamechecker.ValidCheckerResults;
+import ru.tinkoff.tictactoe.gamechecker.exception.CellChangedIncorrectlyInTurnException;
+import ru.tinkoff.tictactoe.gamechecker.exception.GameFieldIncorrectSizeException;
+import ru.tinkoff.tictactoe.gamechecker.exception.NotOneFigureChangedException;
+import ru.tinkoff.tictactoe.gamechecker.exception.ValidCheckerException;
 import ru.tinkoff.tictactoe.gamechecker.impl.GameCheckerImpl;
 import ru.tinkoff.tictactoe.integration.IntegrationSettings;
 import ru.tinkoff.tictactoe.session.Figure;
 
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GameCheckerImplTest extends IntegrationSettings {
     @Autowired
@@ -109,9 +112,10 @@ class GameCheckerImplTest extends IntegrationSettings {
 
     @ParameterizedTest
     @MethodSource("argsForValidTurns")
-    void givenValidTurns_whenIsValidTurn_ThenReturnTrue(String currGameField, String newGameField, Figure figure) {
-        ValidCheckerResults results = gameChecker.isValidTurn(currGameField, newGameField, figure);
-        assertThat(results.getIsValid()).isTrue();
+    void givenValidTurns_whenValidate_ThenDoesNotThrow(String currGameField, String newGameField, Figure figure) {
+        assertDoesNotThrow(() ->
+                gameChecker.validate(currGameField, newGameField, figure)
+        );
     }
 
     private static Stream<Arguments> argsForInvalidTurns() {
@@ -157,7 +161,8 @@ class GameCheckerImplTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________"
                         ,
-                        Figure.CROSS),
+                        Figure.CROSS,
+                        CellChangedIncorrectlyInTurnException.class),
                 Arguments.of("" +
                                 "___xx______________" +
                                 "___________________" +
@@ -199,14 +204,39 @@ class GameCheckerImplTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________"
                         ,
-                        Figure.ZERO)
+                        Figure.ZERO,
+                        NotOneFigureChangedException.class),
+                Arguments.of("" +
+                                "___xx______________" +
+                                "___________________" +
+                                "______o____________" +
+                                "_____o_____________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________" +
+                                "___________________"
+                        , "" +
+                                "___xx___oo_________"
+                        ,
+                        Figure.ZERO,
+                        GameFieldIncorrectSizeException.class)
         );
     }
 
     @ParameterizedTest
     @MethodSource("argsForInvalidTurns")
-    void givenValidTurns_whenIsInvalidTurn_ThenReturnFalse(String currGameField, String newGameField, Figure figure) {
-        ValidCheckerResults results = gameChecker.isValidTurn(currGameField, newGameField, figure);
-        assertThat(results.getIsValid()).isFalse();
+    void givenInvalidTurns_whenValidate_ThenThrowsException(String currGameField, String newGameField, Figure figure, Class<ValidCheckerException> validCheckerException) {
+        assertThrows(validCheckerException, () -> gameChecker.validate(currGameField, newGameField, figure));
     }
 }

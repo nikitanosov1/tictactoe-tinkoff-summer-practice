@@ -38,18 +38,12 @@ public class GameCheckerImpl implements GameChecker {
     }
 
     @Override
-    public ValidCheckerResults isValidTurn(String currGameField, String newGameField, Figure figure) {
+    public void validate(String currGameField, String newGameField, Figure figure) {
         if (!figure.equals(Figure.CROSS) && !figure.equals(Figure.ZERO)) {
             throw new UnsupportedFigureException();
         }
         for (ValidChecker validChecker : validCheckers) {
-            ValidCheckerResults validCheckerResults = validChecker.check(currGameField, newGameField, figure);
-            if (Boolean.FALSE.equals(validCheckerResults.getIsValid())) {
-                return validCheckerResults;
-            }
+            validChecker.validate(currGameField, newGameField, figure);
         }
-        return ValidCheckerResults.builder()
-                .isValid(true)
-                .build();
     }
 }
