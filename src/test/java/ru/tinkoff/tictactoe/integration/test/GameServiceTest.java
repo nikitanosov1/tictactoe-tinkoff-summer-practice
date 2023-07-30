@@ -1,7 +1,6 @@
 package ru.tinkoff.tictactoe.integration.test;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.tinkoff.tictactoe.integration.IntegrationSettings;
@@ -17,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WireMockTest(httpPort = 8081)
 class GameServiceTest extends IntegrationSettings {
     @Autowired
     private GameService gameService;
@@ -32,7 +30,7 @@ class GameServiceTest extends IntegrationSettings {
     void tempName() throws ExecutionException, InterruptedException {
         UUID firstBotId = UUID.randomUUID();
         UUID secondBotId = UUID.randomUUID();
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "___________________" +
                         "___________________" +
@@ -79,7 +77,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "\"}")));
 
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_x_________________" +
                         "___________________" +
@@ -125,7 +123,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "___________________" +
@@ -171,7 +169,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_x_________________" +
@@ -217,7 +215,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -263,7 +261,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -309,7 +307,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -355,7 +353,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -401,7 +399,7 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        WireMock.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
