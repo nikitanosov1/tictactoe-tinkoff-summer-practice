@@ -10,7 +10,6 @@ import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.SessionService;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
-import ru.tinkoff.tictactoe.turn.model.StateOfSession;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,12 +46,6 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Session getSession(UUID sessionId) {
         return sessionRepository.findBySessionId(sessionId);
-    }
-
-    @Override
-    public StateOfSession getStateOfSessionByTurn(UUID sessionId, Integer turn) {
-        // TODO: реализовать получение состояния сессии по ее UUID в момент хода turn
-        return null;
     }
 
     @Override
