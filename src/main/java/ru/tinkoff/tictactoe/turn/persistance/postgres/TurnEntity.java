@@ -23,7 +23,7 @@ public class TurnEntity {
     @Column(name = "turn")
     private Integer turn;
 
-    @Column(name = "game_field")
+    @Column(name = "game_field", length = 361)
     private String gameField;
 
     @CreationTimestamp
@@ -35,4 +35,14 @@ public class TurnEntity {
     @JoinColumn(name = "session_entity_id")
     private SessionEntity sessionEntity;
 
+    @Override
+    public String toString() {
+        return "TurnEntity{" +
+                "id=" + id +
+                ", turn=" + turn +
+                ", gameField='" + gameField + '\'' +
+                ", createdAt=" + createdAt +
+                ", sessionEntity=" + sessionEntity +
+                '}';
+    }
 }

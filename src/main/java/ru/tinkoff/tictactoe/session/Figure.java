@@ -20,4 +20,33 @@ public enum Figure {
     public String getName() {
         return name;
     }
+
+    public static Figure fromString(String text) {
+        for (Figure figure : Figure.values()) {
+            if (figure.name.equals(text)) {
+                return figure;
+            }
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    public static Figure getCrossOutFigure(Figure figure) {
+        if (figure.equals(Figure.CROSS)) {
+            return Figure.CROSSED_OUT_CROSS;
+        }
+        if (figure.equals(Figure.ZERO)) {
+            return Figure.CROSSED_OUT_ZERO;
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    public static Figure getOppositeFigure(Figure figure) {
+        if (figure.equals(Figure.CROSS)) {
+            return Figure.ZERO;
+        }
+        if (figure.equals(Figure.ZERO)) {
+            return Figure.CROSS;
+        }
+        throw new UnsupportedOperationException();
+    }
 }

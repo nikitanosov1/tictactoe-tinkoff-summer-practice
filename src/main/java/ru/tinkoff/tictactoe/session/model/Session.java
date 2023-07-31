@@ -1,7 +1,7 @@
 package ru.tinkoff.tictactoe.session.model;
 
 import lombok.*;
-import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntity;
+import ru.tinkoff.tictactoe.turn.model.Turn;
 
 import java.util.Date;
 import java.util.List;
@@ -16,9 +16,21 @@ public class Session {
     private UUID id;
     private UUID firstBotId;
     private UUID secondBotId;
-    private Integer totalTurns;
-    private List<TurnEntity> turnEntities;
+    private List<Turn> turns;
     private Boolean isActive;
     private Date updatedAt;
     private Date createdAt;
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "id=" + id +
+                ", firstBotId=" + firstBotId +
+                ", secondBotId=" + secondBotId +
+                ", turns=" + turns +
+                ", isActive=" + isActive +
+                ", updatedAt=" + updatedAt +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

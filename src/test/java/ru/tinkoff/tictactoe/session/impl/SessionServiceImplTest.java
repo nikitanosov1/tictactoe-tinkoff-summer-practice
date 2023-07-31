@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.tinkoff.tictactoe.session.Figure;
+import ru.tinkoff.tictactoe.session.GameService;
 import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
@@ -25,6 +26,9 @@ class SessionServiceImplTest {
     @Mock
     private SessionRepository sessionRepositoryMock;
 
+    @Mock
+    private GameService gameServiceMock;
+
     @InjectMocks
     private SessionServiceImpl sessionService;
 
@@ -36,7 +40,7 @@ class SessionServiceImplTest {
                 .isActive(false)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.createSession()).thenReturn(session);
         Session returnedSession = sessionService.createSession();
@@ -55,7 +59,7 @@ class SessionServiceImplTest {
                 .isActive(false)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
         Figure figure = sessionService.registerBotInSession(sessionId, firstBotId);
@@ -76,9 +80,10 @@ class SessionServiceImplTest {
                 .firstBotId(firstBotId)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
+        when(gameServiceMock.startGame(sessionId)).thenReturn(null);
         Figure figure = sessionService.registerBotInSession(sessionId, secondBotId);
         verify(sessionRepositoryMock, times(1)).findBySessionId(sessionId);
         assertThat(figure)
@@ -98,7 +103,7 @@ class SessionServiceImplTest {
                 .secondBotId(secondBotId)
                 .createdAt(new Date())
                 .updatedAt(new Date())
-                .turnEntities(List.of())
+                .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
         assertThrows(SessionIsAlreadyFullException.class, () -> {
