@@ -1,6 +1,7 @@
 package ru.tinkoff.tictactoe.session.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.tictactoe.session.Figure;
@@ -14,6 +15,7 @@ import ru.tinkoff.tictactoe.turn.model.StateOfSession;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
@@ -55,8 +57,11 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public List<StateOfSession> getSessionsByIsActive(Boolean isActive) {
-        // TODO: реализовать получение сессий по активности
-        return null;
+    public List<Session> getSessionsByIsActive(Boolean isActive) {
+        log.info("SessionServiceImpl: getSessionsByIsActive stared with isActive = {}", isActive);
+        if (isActive == null) {
+            return sessionRepository.findAllSessions();
+        }
+        return sessionRepository.findSessionsByIsActive(isActive);
     }
 }

@@ -69,4 +69,14 @@ public class SessionRepositoryImpl implements SessionRepository {
                 .build();
         turnEntityRepository.save(turnEntity);
     }
+
+    @Override
+    public List<Session> findAllSessions() {
+        return sessionEntityMapper.toListOfSession(sessionEntityRepository.findAll());
+    }
+
+    @Override
+    public List<Session> findSessionsByIsActive(Boolean isActive) {
+        return sessionEntityMapper.toListOfSession(sessionEntityRepository.findAllByIsActive(isActive));
+    }
 }
