@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -19,4 +20,6 @@ public interface SessionEntityRepository extends JpaRepository<SessionEntity, UU
     @Query("update SessionEntity s set s.secondBotId = :botId where s.id = :sessionId")
     void updateSessionEntitySetSecondBotId(@Param("sessionId") UUID sessionId,
                                            @Param("botId") UUID botId);
+
+    List<SessionEntity> findAllByIsActive(Boolean isActive);
 }

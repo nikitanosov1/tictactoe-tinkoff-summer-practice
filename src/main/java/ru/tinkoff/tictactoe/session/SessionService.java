@@ -15,5 +15,5 @@ public interface SessionService {
 
     StateOfSession getStateOfSessionByTurn(UUID sessionId, Integer turn);
 
-    List<StateOfSession> getSessionsByIsActive(Boolean isActive);
+    List<Session> getSessionsByIsActive(Boolean isActive);
 }

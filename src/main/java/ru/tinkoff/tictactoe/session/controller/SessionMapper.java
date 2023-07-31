@@ -13,7 +13,7 @@ interface SessionMapper {
     @Mapping(source = "id", target = "sessionId")
     CreateSessionResponseDto toCreateSessionResponseDto(Session session);
 
-    List<FullStateOfSessionResponseDto> toListFullStateOfSessionResponseDto(List<StateOfSession> stateOfSessions);
+    List<SessionResponseDto> toListSessionResponseDto(List<Session> sessions);
 
     @Mapping(source = "updatedAt", target = "lastTurnTime")
     StateOfSessionResponseDto toStateOfSessionResponseDto(StateOfSession stateOfSession);

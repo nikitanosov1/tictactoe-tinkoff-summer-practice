@@ -24,9 +24,9 @@ public class SessionController {
     }
 
     @GetMapping("")
-    public List<FullStateOfSessionResponseDto> getSessions(@RequestParam(value = "isActive", required = false) Boolean isActive) {
-        List<StateOfSession> stateOfSessions = sessionService.getSessionsByIsActive(isActive);
-        return sessionMapper.toListFullStateOfSessionResponseDto(stateOfSessions);
+    public List<SessionResponseDto> getSessions(@RequestParam(value = "isActive", required = false) Boolean isActive) {
+        List<Session> sessions = sessionService.getSessionsByIsActive(isActive);
+        return sessionMapper.toListSessionResponseDto(sessions);
     }
 
     @PostMapping("/{session_id}/registration")
