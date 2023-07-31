@@ -45,9 +45,8 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public StateOfSession getCurrentStateOfSession(UUID sessionId) {
-        // TODO: реализовать получение текущего состояния сессии
-        return null;
+    public Session getSession(UUID sessionId) {
+        return sessionRepository.findBySessionId(sessionId);
     }
 
     @Override

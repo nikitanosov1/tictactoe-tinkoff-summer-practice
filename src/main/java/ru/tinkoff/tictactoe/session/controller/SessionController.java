@@ -37,13 +37,13 @@ public class SessionController {
     }
 
     @GetMapping("/{session_id}")
-    public StateOfSessionResponseDto getCurrentStateOfSession(@PathVariable("session_id") UUID sessionId) {
-        StateOfSession stateOfSession = sessionService.getCurrentStateOfSession(sessionId);
-        return sessionMapper.toStateOfSessionResponseDto(stateOfSession);
+    public SessionResponseDto getSession(@PathVariable("session_id") UUID sessionId) {
+        Session session = sessionService.getSession(sessionId);
+        return sessionMapper.toSessionResponseDto(session);
     }
 
     @GetMapping("/{session_id}/turns/{turn}")
-    public StateOfSessionResponseDto getCurrentStateOfSession(@PathVariable("session_id") UUID sessionId, @PathVariable("turn") Integer turn) {
+    public StateOfSessionResponseDto getStateOfSessionByTurn(@PathVariable("session_id") UUID sessionId, @PathVariable("turn") Integer turn) {
         StateOfSession stateOfSession = sessionService.getStateOfSessionByTurn(sessionId, turn);
         return sessionMapper.toStateOfSessionResponseDto(stateOfSession);
     }

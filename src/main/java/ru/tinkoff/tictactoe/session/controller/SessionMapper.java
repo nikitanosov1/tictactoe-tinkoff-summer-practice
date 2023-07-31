@@ -15,6 +15,8 @@ interface SessionMapper {
 
     List<SessionResponseDto> toListSessionResponseDto(List<Session> sessions);
 
+    SessionResponseDto toSessionResponseDto(Session session);
+
     @Mapping(source = "updatedAt", target = "lastTurnTime")
     StateOfSessionResponseDto toStateOfSessionResponseDto(StateOfSession stateOfSession);
 }

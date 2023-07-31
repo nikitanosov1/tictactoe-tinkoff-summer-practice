@@ -11,7 +11,7 @@ public interface SessionService {
 
     Figure registerBotInSession(UUID sessionId, UUID botId);
 
-    StateOfSession getCurrentStateOfSession(UUID sessionId);
+    Session getSession(UUID sessionId);
 
     StateOfSession getStateOfSessionByTurn(UUID sessionId, Integer turn);
 
