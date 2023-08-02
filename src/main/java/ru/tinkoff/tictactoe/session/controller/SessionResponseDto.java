@@ -33,7 +33,4 @@ class SessionResponseDto {
 
     @JsonProperty(value = "created_at")
     private Date createdAt;
-
-    @JsonProperty(value = "game_field")
-    private String gameField;
 }

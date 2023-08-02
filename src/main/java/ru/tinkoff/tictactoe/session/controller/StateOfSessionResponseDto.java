@@ -14,8 +14,8 @@ class StateOfSessionResponseDto {
     @JsonProperty(value = "game_field")
     private String gameField;
 
-    @JsonProperty(value = "last_turn_time")
-    private Date lastTurnTime;
+    @JsonProperty(value = "turn_time")
+    private Date turnTime;
 
     @JsonProperty(value = "turn")
     private Integer turn;

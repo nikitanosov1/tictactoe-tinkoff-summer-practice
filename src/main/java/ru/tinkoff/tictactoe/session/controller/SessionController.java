@@ -3,9 +3,10 @@ package ru.tinkoff.tictactoe.session.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.tictactoe.session.Figure;
-import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.session.SessionService;
-import ru.tinkoff.tictactoe.turn.model.StateOfSession;
+import ru.tinkoff.tictactoe.session.model.Session;
+import ru.tinkoff.tictactoe.turn.TurnService;
+import ru.tinkoff.tictactoe.turn.model.Turn;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SessionController {
     private final SessionService sessionService;
+    private final TurnService turnService;
     private final SessionMapper sessionMapper;
 
     @PostMapping("")
@@ -37,14 +39,14 @@ public class SessionController {
     }
 
     @GetMapping("/{session_id}")
-    public StateOfSessionResponseDto getCurrentStateOfSession(@PathVariable("session_id") UUID sessionId) {
-        StateOfSession stateOfSession = sessionService.getCurrentStateOfSession(sessionId);
-        return sessionMapper.toStateOfSessionResponseDto(stateOfSession);
+    public SessionResponseDto getSession(@PathVariable("session_id") UUID sessionId) {
+        Session session = sessionService.getSession(sessionId);
+        return sessionMapper.toSessionResponseDto(session);
     }
 
     @GetMapping("/{session_id}/turns/{turn}")
-    public StateOfSessionResponseDto getCurrentStateOfSession(@PathVariable("session_id") UUID sessionId, @PathVariable("turn") Integer turn) {
-        StateOfSession stateOfSession = sessionService.getStateOfSessionByTurn(sessionId, turn);
-        return sessionMapper.toStateOfSessionResponseDto(stateOfSession);
+    public TurnResponseDto getTurnBySessionIdAndTurn(@PathVariable("session_id") UUID sessionId, @PathVariable("turn") Integer turnPath) {
+        Turn turn = turnService.getTurnBySessionIdAndTurn(sessionId, turnPath);
+        return sessionMapper.toTurnResponseDto(turn);
     }
 }
