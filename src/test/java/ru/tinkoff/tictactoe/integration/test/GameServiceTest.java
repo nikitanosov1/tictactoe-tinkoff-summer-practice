@@ -9,10 +9,14 @@ import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.SessionService;
 import ru.tinkoff.tictactoe.session.model.Session;
 
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,10 +31,18 @@ class GameServiceTest extends IntegrationSettings {
     private SessionService sessionService;
 
     @Test
-    void givenSessionWithTwoBots_whenStartGame_thenNewSessionHas10Turns() throws ExecutionException, InterruptedException {
-        UUID firstBotId = UUID.randomUUID();
-        UUID secondBotId = UUID.randomUUID();
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+    void givenSessionWithTwoBots_whenStartGame_thenNewSessionHas10Turns() throws ExecutionException, InterruptedException, UnknownHostException {
+        String firstBotIp = "1.1.1.1";
+        int firstBotPort = 1111;
+        String secondBotIp = "2.2.2.2";
+        int secondBotPort = 2222;
+
+//        String firstBotUri = URI.create(String.format("http:/%s:%d", firstBotIp, firstBotPort)).toString();
+//        String secondBotUri = URI.create(String.format("http:/%s:%d", secondBotIp, secondBotPort)).toString();
+
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(firstBotIp))
+                .withPort(firstBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "___________________" +
                         "___________________" +
@@ -77,7 +89,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "\"}")));
 
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(secondBotIp))
+                .withPort(secondBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_x_________________" +
                         "___________________" +
@@ -123,7 +137,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(firstBotIp))
+                .withPort(firstBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "___________________" +
@@ -169,7 +185,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(secondBotIp))
+                .withPort(secondBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_x_________________" +
@@ -215,7 +233,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(firstBotIp))
+                .withPort(firstBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -261,7 +281,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(secondBotIp))
+                .withPort(secondBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -307,7 +329,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(firstBotIp))
+                .withPort(firstBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -353,7 +377,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(secondBotIp))
+                .withPort(secondBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -399,7 +425,9 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        wireMockServer.stubFor(WireMock.post(WireMock.urlMatching("/bot/turn/(.*)"))
+        wireMockServer.stubFor(WireMock.post("/bot/turn")
+                .withHost(equalTo(firstBotIp))
+                .withPort(firstBotPort)
                 .withRequestBody(equalToJson("{\"game_field\": \"" +
                         "_xo________________" +
                         "_xo________________" +
@@ -445,10 +473,10 @@ class GameServiceTest extends IntegrationSettings {
                                 "___________________" +
                                 "___________________" +
                                 "\"}")));
-        // TODO: вопросик тут есть
+//         TODO: вопросик тут есть
         Session session = sessionService.createSession();
-        sessionRepository.setFirstBotId(session.getId(), firstBotId);
-        sessionRepository.setSecondBotId(session.getId(), secondBotId);
+        sessionRepository.setFirstBotIpAndFirstBotPort(session.getId(), InetAddress.getByName(firstBotIp), firstBotPort);
+        sessionRepository.setSecondBotIpAndSecondBotPort(session.getId(), InetAddress.getByName(secondBotIp), secondBotPort);
         CompletableFuture<Session> result = gameService.startGame(session.getId());
         Session newSession = result.get();
         assertThat(newSession.getTurns()).hasSize(10);

@@ -34,7 +34,7 @@ public class SessionController {
     @PostMapping("/{session_id}/registration")
     public RegisterBotResponseDto registerBotInSession(@PathVariable("session_id") UUID sessionId,
                                                        @RequestBody RegisterBotRequestDto registerBotRequestDto) {
-        Figure figure = sessionService.registerBotInSession(sessionId, registerBotRequestDto.getBotId());
+        Figure figure = sessionService.registerBotInSession(sessionId, registerBotRequestDto.getBotIp(), registerBotRequestDto.getBotPort());
         return new RegisterBotResponseDto(figure);
     }
 
