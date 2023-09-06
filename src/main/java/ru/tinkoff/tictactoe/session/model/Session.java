@@ -1,6 +1,5 @@
 package ru.tinkoff.tictactoe.session.model;
 
-import jakarta.persistence.Column;
 import lombok.*;
 import ru.tinkoff.tictactoe.turn.model.Turn;
 
