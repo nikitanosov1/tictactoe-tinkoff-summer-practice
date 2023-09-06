@@ -14,6 +14,7 @@ import ru.tinkoff.tictactoe.turn.model.Turn;
 import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntity;
 import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntityRepository;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,14 +51,14 @@ public class SessionRepositoryImpl implements SessionRepository {
 
     @Transactional
     @Override
-    public void setFirstBotId(UUID sessionId, UUID botId) {
-        sessionEntityRepository.updateSessionEntitySetFirstBotId(sessionId, botId);
+    public void setFirstBotIpAndFirstBotPort(UUID sessionId, InetAddress botIp, Integer botPort) {
+        sessionEntityRepository.updateSessionEntitySetFirstBotIpAndFirstBotPort(sessionId, botIp, botPort);
     }
 
     @Transactional
     @Override
-    public void setSecondBotId(UUID sessionId, UUID botId) {
-        sessionEntityRepository.updateSessionEntitySetSecondBotId(sessionId, botId);
+    public void setSecondBotIpAndSecondBotPort(UUID sessionId, InetAddress botIp, Integer botPort) {
+        sessionEntityRepository.updateSessionEntitySetSecondBotIpAndSecondBotPort(sessionId, botIp, botPort);
     }
 
     @Override

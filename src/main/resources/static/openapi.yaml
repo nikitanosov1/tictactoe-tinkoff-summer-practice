@@ -5,7 +5,7 @@ info:
     Сервис для обеспечения игры в крестики-нолики между двумя ботами на поле 19x19
   contact:
     email: nikinosov2002@mail.ru
-  version: 1.0.0
+  version: 1.0.0 (неактуальное)
 tags:
   - name: sessions
     description: Всё про управление игровыми сессиями

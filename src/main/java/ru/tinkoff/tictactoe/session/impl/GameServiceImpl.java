@@ -17,6 +17,8 @@ import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.turn.model.Turn;
 
+import java.net.InetAddress;
+import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -35,12 +37,17 @@ public class GameServiceImpl implements GameService {
     public CompletableFuture<Session> startGame(UUID sessionId) {
         log.info("In session {} the game has started", sessionId);
         Session session = sessionRepository.findBySessionId(sessionId);
-        UUID attackingBotId = session.getFirstBotId();
-        UUID defendingBotId = session.getSecondBotId();
+
+        URI firstBotUri = URI.create(String.format("http:/%s:%d", session.getFirstBotIp(), session.getFirstBotPort()));
+        URI secondBotUri = URI.create(String.format("http:/%s:%d", session.getSecondBotIp(), session.getSecondBotPort()));
+        log.info("In session {} firstBotUri = {} and secondBotUri = {}", sessionId, firstBotUri, secondBotUri);
+
+        URI attackingBotURI = firstBotUri;
+        URI defendingBotURI = secondBotUri;
 
         while (isBothBotsAlive(session, steps)) {
             int currTurn = session.getTurns().size();
-            log.info("In session {} the turn {} has begun with attackingBotId {} and defendingBotId {}", sessionId, currTurn, attackingBotId, defendingBotId);
+            log.info("In session {} the turn {} has begun with attackingBotURI {} and defendingBotURI {}", sessionId, currTurn, attackingBotURI, defendingBotURI);
             Figure attackingBotFigure = (currTurn % 2 == 0) ? Figure.ZERO : Figure.CROSS;
             String currGameField = session.getTurns().get(currTurn - 1).getGameField();
 
@@ -50,7 +57,7 @@ public class GameServiceImpl implements GameService {
                     .build();
 
             // Стучим attackingBot, чтобы он сделал ход
-            BotResponse attackingBotResponse = botClient.makeTurn(attackingBotId, new BotRequest(currGameField));
+            BotResponse attackingBotResponse = botClient.makeTurn(attackingBotURI, new BotRequest(currGameField));
             // TODO: Добавить логику на случай, если makeTurn кидает exception
             String newGameField = attackingBotResponse.getGameField();
             log.info("In session {} newGameField = {}", sessionId, newGameField);
@@ -64,16 +71,16 @@ public class GameServiceImpl implements GameService {
                 session.getTurns().add(newTurn);
                 sessionRepository.addTurnToSession(session.getId(), newTurn);
 
-                UUID temp = attackingBotId;
-                attackingBotId = defendingBotId;
-                defendingBotId = temp;
+                URI temp = attackingBotURI;
+                attackingBotURI = defendingBotURI;
+                defendingBotURI = temp;
                 continue;
             }
 
             // Проверяем, не победил ли attackingBot своим ходом
             WinCheckerResults winCheckerResults = gameChecker.isWin(newGameField, attackingBotFigure);
             if (winCheckerResults.getIsWin().equals(Boolean.TRUE)) {
-                log.info("In session {} bot {} win!", sessionId, attackingBotId);
+                log.info("In session {} bot {} win!", sessionId, attackingBotURI);
                 newTurn.setGameField(winCheckerResults.getNewGameField());
                 session.getTurns().add(newTurn);
                 sessionRepository.addTurnToSession(session.getId(), newTurn);
@@ -83,9 +90,9 @@ public class GameServiceImpl implements GameService {
             sessionRepository.addTurnToSession(session.getId(), newTurn);
 
             // Меняем attackingBotId с defendingBotId
-            UUID temp = attackingBotId;
-            attackingBotId = defendingBotId;
-            defendingBotId = temp;
+            URI temp = attackingBotURI;
+            attackingBotURI = defendingBotURI;
+            defendingBotURI = temp;
         }
         log.info("The game ended in session {} ", sessionId);
         return CompletableFuture.completedFuture(session);

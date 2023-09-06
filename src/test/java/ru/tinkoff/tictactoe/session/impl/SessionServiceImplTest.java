@@ -14,6 +14,9 @@ import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
 
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -51,9 +54,10 @@ class SessionServiceImplTest {
     }
 
     @Test
-    void givenBotIdAndSessionId_whenForTheFirstTimeRegisterBotInSession_thenReturnCrossFigure() {
+    void givenBotIdAndSessionId_whenForTheFirstTimeRegisterBotInSession_thenReturnCrossFigure() throws UnknownHostException {
         UUID sessionId = UUID.randomUUID();
-        UUID firstBotId = UUID.randomUUID();
+        String firstBotIp = "1.1.1.1";
+        int firstBotPort = 1111;
         Session session = Session.builder()
                 .id(sessionId)
                 .isActive(false)
@@ -62,7 +66,7 @@ class SessionServiceImplTest {
                 .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
-        Figure figure = sessionService.registerBotInSession(sessionId, firstBotId);
+        Figure figure = sessionService.registerBotInSession(sessionId, InetAddress.getByName(firstBotIp), firstBotPort);
         verify(sessionRepositoryMock, times(1)).findBySessionId(sessionId);
         assertThat(figure)
                 .isNotNull()
@@ -70,21 +74,24 @@ class SessionServiceImplTest {
     }
 
     @Test
-    void givenBotIdAndSessionId_whenForTheSecondTimeRegisterBotInSession_thenReturnZeroFigure() {
+    void givenBotIdAndSessionId_whenForTheSecondTimeRegisterBotInSession_thenReturnZeroFigure() throws UnknownHostException {
         UUID sessionId = UUID.randomUUID();
-        UUID firstBotId = UUID.randomUUID();
-        UUID secondBotId = UUID.randomUUID();
+        String firstBotIp = "1.1.1.1";
+        int firstBotPort = 1111;
+        String secondBotIp = "2.2.2.2";
+        int secondBotPort = 2222;
         Session session = Session.builder()
                 .id(sessionId)
                 .isActive(false)
-                .firstBotId(firstBotId)
+                .firstBotIp(InetAddress.getByName(firstBotIp))
+                .firstBotPort(firstBotPort)
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
         when(gameServiceMock.startGame(sessionId)).thenReturn(null);
-        Figure figure = sessionService.registerBotInSession(sessionId, secondBotId);
+        Figure figure = sessionService.registerBotInSession(sessionId, InetAddress.getByName(secondBotIp), secondBotPort);
         verify(sessionRepositoryMock, times(1)).findBySessionId(sessionId);
         assertThat(figure)
                 .isNotNull()
@@ -92,22 +99,26 @@ class SessionServiceImplTest {
     }
 
     @Test
-    void givenBotIdAndSessionId_whenForTheThirdTimeRegisterBotInSession_thenThrowApiException() {
+    void givenBotIdAndSessionId_whenForTheThirdTimeRegisterBotInSession_thenThrowApiException() throws UnknownHostException {
         UUID sessionId = UUID.randomUUID();
-        UUID firstBotId = UUID.randomUUID();
-        UUID secondBotId = UUID.randomUUID();
+        String firstBotIp = "1.1.1.1";
+        int firstBotPort = 1111;
+        String secondBotIp = "2.2.2.2";
+        int secondBotPort = 2222;
         Session session = Session.builder()
                 .id(sessionId)
                 .isActive(false)
-                .firstBotId(firstBotId)
-                .secondBotId(secondBotId)
+                .firstBotIp(InetAddress.getByName(firstBotIp))
+                .firstBotPort(firstBotPort)
+                .secondBotIp(InetAddress.getByName(secondBotIp))
+                .secondBotPort(secondBotPort)
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .turns(List.of())
                 .build();
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
         assertThrows(SessionIsAlreadyFullException.class, () -> {
-            sessionService.registerBotInSession(sessionId, secondBotId);
+            sessionService.registerBotInSession(sessionId, InetAddress.getByName(secondBotIp), secondBotPort);
         });
     }
 }

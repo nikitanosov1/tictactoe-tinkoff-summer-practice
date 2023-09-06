@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntity;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +24,17 @@ public class SessionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "first_bot_id")
-    private UUID firstBotId;
+    @Column(name = "first_bot_ip")
+    private InetAddress firstBotIp;
 
-    @Column(name = "second_bot_id")
-    private UUID secondBotId;
+    @Column(name = "first_bot_port")
+    private Integer firstBotPort;
+
+    @Column(name = "second_bot_ip")
+    private InetAddress secondBotIp;
+
+    @Column(name = "second_bot_port")
+    private Integer secondBotPort;
 
     @OneToMany(mappedBy = "sessionEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<TurnEntity> turnEntities = new ArrayList<>();

@@ -1,0 +1,205 @@
+openapi: 3.0.1
+info:
+  title: Актуальное автосгенерированное API
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /sessions:
+    get:
+      tags:
+        - session-controller
+      operationId: getSessions
+      parameters:
+        - name: isActive
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionResponseDto'
+    post:
+      tags:
+        - session-controller
+      operationId: createSession
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateSessionResponseDto'
+  /sessions/{session_id}/registration:
+    post:
+      tags:
+        - session-controller
+      operationId: registerBotInSession
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBotRequestDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RegisterBotResponseDto'
+  /sessions/{session_id}:
+    get:
+      tags:
+        - session-controller
+      operationId: getSession
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SessionResponseDto'
+  /sessions/{session_id}/turns/{turn}:
+    get:
+      tags:
+        - session-controller
+      operationId: getTurnBySessionIdAndTurn
+      parameters:
+        - name: session_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: turn
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TurnResponseDto'
+components:
+  schemas:
+    CreateSessionResponseDto:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: uuid
+    RegisterBotRequestDto:
+      type: object
+      properties:
+        bot_ip:
+          type: object
+          properties:
+            hostAddress:
+              type: string
+            address:
+              type: array
+              items:
+                type: string
+                format: byte
+            hostName:
+              type: string
+            linkLocalAddress:
+              type: boolean
+            multicastAddress:
+              type: boolean
+            anyLocalAddress:
+              type: boolean
+            loopbackAddress:
+              type: boolean
+            siteLocalAddress:
+              type: boolean
+            mcglobal:
+              type: boolean
+            mcnodeLocal:
+              type: boolean
+            mclinkLocal:
+              type: boolean
+            mcsiteLocal:
+              type: boolean
+            mcorgLocal:
+              type: boolean
+            canonicalHostName:
+              type: string
+        bot_port:
+          type: integer
+          format: int32
+    RegisterBotResponseDto:
+      type: object
+      properties:
+        figure:
+          type: string
+          enum:
+            - x
+            - o
+            - X
+            - O
+            - _
+    SessionResponseDto:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: uuid
+        first_bot_id:
+          type: string
+          format: uuid
+        second_bot_id:
+          type: string
+          format: uuid
+        turns:
+          type: array
+          items:
+            $ref: '#/components/schemas/TurnResponseDto'
+        is_active:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    TurnResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        turn:
+          type: integer
+          format: int32
+        game_field:
+          type: string
+        created_at:
+          type: string
+          format: date-time

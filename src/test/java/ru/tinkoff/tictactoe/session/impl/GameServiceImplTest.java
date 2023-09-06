@@ -7,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ru.tinkoff.tictactoe.client.BotClient;
 import ru.tinkoff.tictactoe.client.BotRequest;
 import ru.tinkoff.tictactoe.client.BotResponse;
@@ -19,6 +17,9 @@ import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.turn.model.Turn;
 
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,11 +27,9 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class GameServiceImplTest {
     @Mock
     private SessionRepository sessionRepositoryMock;
@@ -50,15 +49,22 @@ class GameServiceImplTest {
     }
 
     @Test
-    void givenSessionId_whenStartGame_thenReturnSessionWithNewTurns() throws ExecutionException, InterruptedException {
+    void givenSessionId_whenStartGame_thenReturnSessionWithNewTurns() throws ExecutionException, InterruptedException, UnknownHostException {
         UUID sessionId = UUID.randomUUID();
-        UUID firstBotId = UUID.randomUUID();
-        UUID secondBotId = UUID.randomUUID();
+        String firstBotIp = "1.1.1.1";
+        int firstBotPort = 1111;
+        String secondBotIp = "2.2.2.2";
+        int secondBotPort = 2222;
+        URI firstBotUri = URI.create(String.format("http://%s:%d", firstBotIp, firstBotPort));
+        URI secondBotUri = URI.create(String.format("http://%s:%d", secondBotIp, secondBotPort));
+
         Session session = Session.builder()
                 .id(sessionId)
                 .isActive(false)
-                .firstBotId(firstBotId)
-                .secondBotId(secondBotId)
+                .firstBotIp(InetAddress.getByName(firstBotIp))
+                .firstBotPort(firstBotPort)
+                .secondBotIp(InetAddress.getByName(secondBotIp))
+                .secondBotPort(secondBotPort)
                 .turns(new ArrayList<>(List.of(Turn.builder()
                         .gameField("_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________")
                         .turn(0)
@@ -79,15 +85,15 @@ class GameServiceImplTest {
         String turnGameField9 = "xxxxxoooo________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
 
         when(sessionRepositoryMock.findBySessionId(sessionId)).thenReturn(session);
-        when(botClient.makeTurn(firstBotId, new BotRequest(turnGameField0))).thenReturn(new BotResponse(turnGameField1));
-        when(botClient.makeTurn(secondBotId, new BotRequest(turnGameField1))).thenReturn(new BotResponse(turnGameField2));
-        when(botClient.makeTurn(firstBotId, new BotRequest(turnGameField2))).thenReturn(new BotResponse(turnGameField3));
-        when(botClient.makeTurn(secondBotId, new BotRequest(turnGameField3))).thenReturn(new BotResponse(turnGameField4));
-        when(botClient.makeTurn(firstBotId, new BotRequest(turnGameField4))).thenReturn(new BotResponse(turnGameField5));
-        when(botClient.makeTurn(secondBotId, new BotRequest(turnGameField5))).thenReturn(new BotResponse(turnGameField6));
-        when(botClient.makeTurn(firstBotId, new BotRequest(turnGameField6))).thenReturn(new BotResponse(turnGameField7));
-        when(botClient.makeTurn(secondBotId, new BotRequest(turnGameField7))).thenReturn(new BotResponse(turnGameField8));
-        when(botClient.makeTurn(firstBotId, new BotRequest(turnGameField8))).thenReturn(new BotResponse(turnGameField9));
+        when(botClient.makeTurn(firstBotUri, new BotRequest(turnGameField0))).thenReturn(new BotResponse(turnGameField1));
+        when(botClient.makeTurn(secondBotUri, new BotRequest(turnGameField1))).thenReturn(new BotResponse(turnGameField2));
+        when(botClient.makeTurn(firstBotUri, new BotRequest(turnGameField2))).thenReturn(new BotResponse(turnGameField3));
+        when(botClient.makeTurn(secondBotUri, new BotRequest(turnGameField3))).thenReturn(new BotResponse(turnGameField4));
+        when(botClient.makeTurn(firstBotUri, new BotRequest(turnGameField4))).thenReturn(new BotResponse(turnGameField5));
+        when(botClient.makeTurn(secondBotUri, new BotRequest(turnGameField5))).thenReturn(new BotResponse(turnGameField6));
+        when(botClient.makeTurn(firstBotUri, new BotRequest(turnGameField6))).thenReturn(new BotResponse(turnGameField7));
+        when(botClient.makeTurn(secondBotUri, new BotRequest(turnGameField7))).thenReturn(new BotResponse(turnGameField8));
+        when(botClient.makeTurn(firstBotUri, new BotRequest(turnGameField8))).thenReturn(new BotResponse(turnGameField9));
 
         when(gameChecker.isWin(turnGameField1, Figure.CROSS)).thenReturn(WinCheckerResults.builder().isWin(false).build());
         when(gameChecker.isWin(turnGameField2, Figure.ZERO)).thenReturn(WinCheckerResults.builder().isWin(false).build());

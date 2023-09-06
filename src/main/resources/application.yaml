@@ -8,7 +8,7 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create}
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:none}
     show-sql: true
     properties:
       hibernate:
@@ -16,22 +16,19 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    enabled: false
+    enabled: true
     schemas: public
   servlet:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
+      
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
 
-botClient:
-  ribbon:
-    listOfServers: localhost:8081
-
-feign:
-  client:
-    config:
-      default:
-        connectTimeout=5000
-        readTimeout=5000
 bots:
   step-for-bots-alive: 2
+  url-path: /bot/turn

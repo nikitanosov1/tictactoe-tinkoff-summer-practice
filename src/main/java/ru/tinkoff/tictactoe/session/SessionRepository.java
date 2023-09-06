@@ -3,6 +3,7 @@ package ru.tinkoff.tictactoe.session;
 import ru.tinkoff.tictactoe.session.model.Session;
 import ru.tinkoff.tictactoe.turn.model.Turn;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,9 +12,9 @@ public interface SessionRepository {
 
     Session findBySessionId(UUID sessionId);
 
-    void setFirstBotId(UUID sessionId, UUID botId);
+    void setFirstBotIpAndFirstBotPort(UUID sessionId, InetAddress botIp, Integer botPort);
 
-    void setSecondBotId(UUID sessionId, UUID botId);
+    void setSecondBotIpAndSecondBotPort(UUID sessionId, InetAddress botIp, Integer botPort);
 
     void addTurnToSession(UUID sessionId, Turn turn);
 

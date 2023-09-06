@@ -11,6 +11,7 @@ import ru.tinkoff.tictactoe.session.SessionService;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
 
+import java.net.InetAddress;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,16 +30,16 @@ public class SessionServiceImpl implements SessionService {
 
     @Transactional
     @Override
-    public Figure registerBotInSession(UUID sessionId, UUID botId) {
+    public Figure registerBotInSession(UUID sessionId, InetAddress botIp, Integer botPort) {
         Session session = sessionRepository.findBySessionId(sessionId);
-        if (session.getFirstBotId() == null) {
-            sessionRepository.setFirstBotId(session.getId(), botId);
+        if (session.getFirstBotIp() == null) {
+            sessionRepository.setFirstBotIpAndFirstBotPort(sessionId, botIp, botPort);
             return Figure.CROSS;
         }
-        if (session.getSecondBotId() != null) {
+        if (session.getSecondBotIp() != null) {
             throw new SessionIsAlreadyFullException();
         }
-        sessionRepository.setSecondBotId(session.getId(), botId);
+        sessionRepository.setSecondBotIpAndSecondBotPort(sessionId, botIp, botPort);
         gameService.startGame(session.getId());
         return Figure.ZERO;
     }
