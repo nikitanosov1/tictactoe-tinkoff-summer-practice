@@ -2,6 +2,7 @@ package ru.tinkoff.tictactoe.session.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.tinkoff.tictactoe.session.Figure;
+import ru.tinkoff.tictactoe.session.GameService;
 import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
@@ -23,6 +25,9 @@ class SessionServiceImplTest {
 
     @Mock
     private SessionRepository sessionRepositoryMock;
+
+    @Mock
+    private GameService gameServiceMock;
 
     @InjectMocks
     private SessionServiceImpl sessionService;
@@ -92,6 +97,7 @@ class SessionServiceImplTest {
         assertThat(figure)
             .isNotNull()
             .isEqualTo(Figure.ZERO);
+        verify(gameServiceMock, only()).startGame(sessionId);
     }
 
     @Test

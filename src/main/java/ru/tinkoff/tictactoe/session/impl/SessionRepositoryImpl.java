@@ -52,7 +52,9 @@ public class SessionRepositoryImpl implements SessionRepository {
 
     @Override
     public Session findBySessionId(UUID sessionId) {
-        return sessionEntityMapper.toSession(findById(sessionId));
+        final var sessionEntity = sessionEntityRepository.findById(sessionId)
+            .orElseThrow(SessionNotFoundException::new);
+        return sessionEntityMapper.toSession(sessionEntity);
     }
 
     @Override
