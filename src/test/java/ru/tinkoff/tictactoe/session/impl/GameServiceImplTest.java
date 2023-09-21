@@ -60,7 +60,8 @@ class GameServiceImplTest {
 
     private final GameChecker gameChecker = Mockito.mock(GameChecker.class);
     private final GameConfigs gameConfigs = new GameConfigs(
-        Duration.ofNanos(1)
+        Duration.ofNanos(1),
+        19
     );
 
     private final GameServiceImpl gameService = new GameServiceImpl(

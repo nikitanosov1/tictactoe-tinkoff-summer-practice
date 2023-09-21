@@ -1,26 +1,16 @@
 package ru.tinkoff.tictactoe.session.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Date;
 import java.util.UUID;
+import lombok.Builder;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @Builder
-public class TurnResponseDto {
-    @JsonProperty(value = "id")
-    private UUID id;
-
-    @JsonProperty(value = "turn")
-    private Integer turn;
-
-    @JsonProperty(value = "game_field")
-    private String gameField;
-
-    @JsonProperty(value = "created_at")
-    private Date createdAt;
-}
+@JsonNaming(SnakeCaseStrategy.class)
+public record TurnResponseDto(
+    UUID id,
+    Integer turn,
+    String gameField,
+    Date createdAt
+) {}

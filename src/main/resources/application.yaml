@@ -31,3 +31,4 @@ springdoc:
 
 config:
   sleep-duration: PT1S
+  game-field-size: 19

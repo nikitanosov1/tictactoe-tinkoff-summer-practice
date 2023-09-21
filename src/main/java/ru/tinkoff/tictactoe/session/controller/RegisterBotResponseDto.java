@@ -1,7 +1,10 @@
 package ru.tinkoff.tictactoe.session.controller;
 
-import lombok.*;
-import ru.tinkoff.tictactoe.session.Figure;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -9,5 +12,6 @@ import ru.tinkoff.tictactoe.session.Figure;
 @Setter
 @Builder
 class RegisterBotResponseDto {
-    private Figure figure;
+
+    private String figure;
 }

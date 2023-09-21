@@ -5,5 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "config")
 public record GameConfigs(
-    Duration sleepDuration
+    Duration sleepDuration,
+    int gameFieldSize
 ) {}

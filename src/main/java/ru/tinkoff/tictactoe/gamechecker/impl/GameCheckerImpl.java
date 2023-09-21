@@ -8,7 +8,6 @@ import ru.tinkoff.tictactoe.gamechecker.GameContinuesResult;
 import ru.tinkoff.tictactoe.gamechecker.ValidChecker;
 import ru.tinkoff.tictactoe.gamechecker.WinChecker;
 import ru.tinkoff.tictactoe.gamechecker.WinCheckerResults;
-import ru.tinkoff.tictactoe.gamechecker.exception.UnsupportedFigureException;
 import ru.tinkoff.tictactoe.session.Figure;
 
 @RequiredArgsConstructor
@@ -27,9 +26,6 @@ public class GameCheckerImpl implements GameChecker {
      */
     @Override
     public WinCheckerResults isWin(String gameField, Figure figure) {
-        if (!figure.equals(Figure.CROSS) && !figure.equals(Figure.ZERO)) {
-            throw new UnsupportedFigureException();
-        }
         for (WinChecker winChecker : winCheckers) {
             WinCheckerResults winCheckerResults = winChecker.check(gameField, figure);
             if (Boolean.TRUE.equals(winCheckerResults.win())) {
@@ -41,9 +37,6 @@ public class GameCheckerImpl implements GameChecker {
 
     @Override
     public void validate(String currGameField, String newGameField, Figure figure) {
-        if (!figure.equals(Figure.CROSS) && !figure.equals(Figure.ZERO)) {
-            throw new UnsupportedFigureException();
-        }
         for (ValidChecker validChecker : validCheckers) {
             validChecker.validate(currGameField, newGameField, figure);
         }

@@ -47,7 +47,7 @@ public class SessionController {
             registerBotRequestDto.botUrl(),
             registerBotRequestDto.botId()
         );
-        return new RegisterBotResponseDto(figure);
+        return new RegisterBotResponseDto(figure.getName());
     }
 
     @GetMapping("/{session_id}")
