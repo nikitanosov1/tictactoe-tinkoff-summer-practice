@@ -22,13 +22,12 @@ spring:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
-      
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
   api-docs:
     path: /api-docs
 
-bots:
-  step-for-bots-alive: 2
-  url-path: /bot/turn
+config:
+  sleep-duration: PT1S

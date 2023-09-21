@@ -8,12 +8,13 @@ import lombok.Builder;
 
 @Builder
 @JsonNaming(SnakeCaseStrategy.class)
-record SessionResponseDto(
+record SessionLastTurnResponseDto(
     UUID id,
     String attackingBotUrl,
     String attackingBotId,
     String defendingBotUrl,
     String defendingBotId,
+    TurnResponseDto lastTurn,
     Boolean isActive,
     Date updatedAt,
     Date createdAt

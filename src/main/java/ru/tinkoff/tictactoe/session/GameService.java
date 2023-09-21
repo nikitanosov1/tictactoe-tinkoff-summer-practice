@@ -1,10 +1,13 @@
 package ru.tinkoff.tictactoe.session;
 
-import ru.tinkoff.tictactoe.session.model.Session;
-
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public interface GameService {
-    CompletableFuture<Session> startGame(UUID sessionId);
+
+    String ZERO_TURN_GAME_FIELD =
+        "_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
+    Figure ATTACKING_BOT_FIGURE = Figure.CROSS;
+    Figure DEFENDING_BOT_FIGURE = Figure.ZERO;
+
+    void startGame(UUID sessionId) throws InterruptedException;
 }

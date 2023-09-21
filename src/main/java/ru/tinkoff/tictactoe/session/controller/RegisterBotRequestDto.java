@@ -1,19 +1,11 @@
 package ru.tinkoff.tictactoe.session.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-import java.net.InetAddress;
+@JsonNaming(SnakeCaseStrategy.class)
+record RegisterBotRequestDto(
+    String botUrl,
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Builder
-class RegisterBotRequestDto {
-    @JsonProperty(value = "bot_ip")
-    private InetAddress botIp;
-
-    @JsonProperty(value = "bot_port")
-    private Integer botPort;
-}
+    String botId
+) {}

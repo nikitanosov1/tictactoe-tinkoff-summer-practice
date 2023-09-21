@@ -1,11 +1,12 @@
 package ru.tinkoff.tictactoe.session.controller;
 
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.tinkoff.tictactoe.session.model.Session;
+import ru.tinkoff.tictactoe.session.model.SessionWithAllTurns;
+import ru.tinkoff.tictactoe.session.model.SessionWithLastTurn;
 import ru.tinkoff.tictactoe.turn.model.Turn;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 interface SessionMapper {
@@ -15,7 +16,7 @@ interface SessionMapper {
 
     List<SessionResponseDto> toListSessionResponseDto(List<Session> sessions);
 
-    SessionResponseDto toSessionResponseDto(Session session);
+    SessionLastTurnResponseDto toSessionResponseDto(SessionWithLastTurn session);
 
     TurnResponseDto toTurnResponseDto(Turn turn);
 }

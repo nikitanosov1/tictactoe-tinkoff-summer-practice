@@ -1,5 +1,6 @@
 package ru.tinkoff.tictactoe.gamechecker;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -19,8 +20,14 @@ class OnTheHorizontalLineWinCheckerTest {
         String expectGameField = "XXXXXoooo________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
         Figure figure = Figure.CROSS;
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isTrue();
-        assertThat(results.getNewGameField()).isEqualTo(expectGameField);
+        final var assertion = assertThat(results)
+            .asInstanceOf(InstanceOfAssertFactories.type(GameWinResult.class));
+        assertion
+            .extracting(GameWinResult::win)
+            .isEqualTo(true);
+        assertion
+            .extracting(GameWinResult::newGameField)
+            .isEqualTo(expectGameField);
     }
 
     @Test
@@ -29,8 +36,14 @@ class OnTheHorizontalLineWinCheckerTest {
         String expectGameField = "xxxx_oooo_OOOOO__________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________";
         Figure figure = Figure.ZERO;
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isTrue();
-        assertThat(results.getNewGameField()).isEqualTo(expectGameField);
+        final var assertion = assertThat(results)
+            .asInstanceOf(InstanceOfAssertFactories.type(GameWinResult.class));
+        assertion
+            .extracting(GameWinResult::win)
+            .isEqualTo(true);
+        assertion
+            .extracting(GameWinResult::newGameField)
+            .isEqualTo(expectGameField);
     }
 
     private static Stream<Arguments> argsForIsWinFalse() {
@@ -50,7 +63,7 @@ class OnTheHorizontalLineWinCheckerTest {
     @MethodSource("argsForIsWinFalse")
     void givenLosingGameField_whenCheck_thenReturnIsWinFalse(String gameField, Figure figure) {
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isFalse();
+        assertThat(results.win()).isFalse();
     }
 
     private static Stream<Arguments> argsForIsWinTrue() {
@@ -70,6 +83,6 @@ class OnTheHorizontalLineWinCheckerTest {
     @MethodSource("argsForIsWinTrue")
     void givenLosingGameField_whenCheck_thenReturnIsWinTrue(String gameField, Figure figure) {
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isTrue();
+        assertThat(results.win()).isTrue();
     }
 }

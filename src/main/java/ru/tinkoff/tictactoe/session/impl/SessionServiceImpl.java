@@ -1,5 +1,7 @@
 package ru.tinkoff.tictactoe.session.impl;
 
+import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,15 +12,14 @@ import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.SessionService;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
-
-import java.net.InetAddress;
-import java.util.List;
-import java.util.UUID;
+import ru.tinkoff.tictactoe.session.model.SessionWithAllTurns;
+import ru.tinkoff.tictactoe.session.model.SessionWithLastTurn;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SessionServiceImpl implements SessionService {
+
     private final SessionRepository sessionRepository;
     private final GameService gameService;
 
@@ -30,23 +31,23 @@ public class SessionServiceImpl implements SessionService {
 
     @Transactional
     @Override
-    public Figure registerBotInSession(UUID sessionId, InetAddress botIp, Integer botPort) {
+    public Figure registerBotInSession(UUID sessionId, String url, String botId) throws InterruptedException {
         Session session = sessionRepository.findBySessionId(sessionId);
-        if (session.getFirstBotIp() == null) {
-            sessionRepository.setFirstBotIpAndFirstBotPort(sessionId, botIp, botPort);
-            return Figure.CROSS;
+        if (session.attackingBotUrl() == null) {
+            sessionRepository.setAttackingBot(sessionId, url, botId);
+            return GameService.ATTACKING_BOT_FIGURE;
         }
-        if (session.getSecondBotIp() != null) {
+        if (session.defendingBotUrl() != null) {
             throw new SessionIsAlreadyFullException();
         }
-        sessionRepository.setSecondBotIpAndSecondBotPort(sessionId, botIp, botPort);
-        gameService.startGame(session.getId());
-        return Figure.ZERO;
+        sessionRepository.setDefendingBot(sessionId, url, botId);
+        gameService.startGame(session.id());
+        return GameService.DEFENDING_BOT_FIGURE;
     }
 
     @Override
-    public Session getSession(UUID sessionId) {
-        return sessionRepository.findBySessionId(sessionId);
+    public SessionWithLastTurn getSession(UUID sessionId) {
+        return sessionRepository.findFetchLastTurnBySessionId(sessionId);
     }
 
     @Override

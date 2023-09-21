@@ -1,17 +1,18 @@
 package ru.tinkoff.tictactoe.session;
 
 import ru.tinkoff.tictactoe.session.model.Session;
+import ru.tinkoff.tictactoe.session.model.SessionWithAllTurns;
 
-import java.net.InetAddress;
 import java.util.List;
 import java.util.UUID;
+import ru.tinkoff.tictactoe.session.model.SessionWithLastTurn;
 
 public interface SessionService {
     Session createSession();
 
-    Figure registerBotInSession(UUID sessionId, InetAddress botIp, Integer botPort);
+    Figure registerBotInSession(UUID sessionId, String url, String botId) throws InterruptedException;
 
-    Session getSession(UUID sessionId);
+    SessionWithLastTurn getSession(UUID sessionId);
 
     List<Session> getSessionsByIsActive(Boolean isActive);
 }

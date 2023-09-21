@@ -1,111 +1,118 @@
 package ru.tinkoff.tictactoe.session.impl;
 
+import java.net.URI;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.tictactoe.client.BotClient;
 import ru.tinkoff.tictactoe.client.BotRequest;
 import ru.tinkoff.tictactoe.client.BotResponse;
+import ru.tinkoff.tictactoe.client.exception.BotResponseStatusCodeNotOkException;
 import ru.tinkoff.tictactoe.gamechecker.GameChecker;
+import ru.tinkoff.tictactoe.gamechecker.GameWinResult;
 import ru.tinkoff.tictactoe.gamechecker.WinCheckerResults;
 import ru.tinkoff.tictactoe.gamechecker.exception.ValidCheckerException;
 import ru.tinkoff.tictactoe.session.Figure;
 import ru.tinkoff.tictactoe.session.GameService;
 import ru.tinkoff.tictactoe.session.SessionRepository;
-import ru.tinkoff.tictactoe.session.model.Session;
+import ru.tinkoff.tictactoe.session.model.SessionWithAllTurns;
 import ru.tinkoff.tictactoe.turn.model.Turn;
-
-import java.net.InetAddress;
-import java.net.URI;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class GameServiceImpl implements GameService {
+
+    private static final String ATTACKING_BOT_NAME = "attacking";
+    private static final String DEFENDING_BOT_NAME = "defending";
     private final SessionRepository sessionRepository;
     private final BotClient botClient;
     private final GameChecker gameChecker;
 
-    @Value("${bots.step-for-bots-alive}")
-    private int steps;
+    private final GameConfigs gameConfigs;
 
-    @Async
-    public CompletableFuture<Session> startGame(UUID sessionId) {
-        log.info("In session {} the game has started", sessionId);
-        Session session = sessionRepository.findBySessionId(sessionId);
+    @Autowired
+    @Lazy
+    private GameServiceImpl gameService;
 
-        URI firstBotUri = URI.create(String.format("http:/%s:%d", session.getFirstBotIp(), session.getFirstBotPort()));
-        URI secondBotUri = URI.create(String.format("http:/%s:%d", session.getSecondBotIp(), session.getSecondBotPort()));
-        log.info("In session {} firstBotUri = {} and secondBotUri = {}", sessionId, firstBotUri, secondBotUri);
-
-        URI attackingBotURI = firstBotUri;
-        URI defendingBotURI = secondBotUri;
-
-        while (isBothBotsAlive(session, steps)) {
-            int currTurn = session.getTurns().size();
-            log.info("In session {} the turn {} has begun with attackingBotURI {} and defendingBotURI {}", sessionId, currTurn, attackingBotURI, defendingBotURI);
-            Figure attackingBotFigure = (currTurn % 2 == 0) ? Figure.ZERO : Figure.CROSS;
-            String currGameField = session.getTurns().get(currTurn - 1).getGameField();
-
-            Turn newTurn = Turn.builder()
-                    .gameField(currGameField)
-                    .turn(currTurn)
-                    .build();
-
-            // Стучим attackingBot, чтобы он сделал ход
-            BotResponse attackingBotResponse = botClient.makeTurn(attackingBotURI, new BotRequest(currGameField));
-            // TODO: Добавить логику на случай, если makeTurn кидает exception
-            String newGameField = attackingBotResponse.getGameField();
-            log.info("In session {} newGameField = {}", sessionId, newGameField);
-
-            // Проверяем, что в поле изменилось именно одно поле с символа _ на символ attackingBotFigure
-            try {
-                gameChecker.validate(currGameField, newGameField, attackingBotFigure);
-                newTurn.setGameField(newGameField);
-            } catch (ValidCheckerException e) {
-                // Если бот ответил невалидным полем, то не меняем поле и передаем ход другому боту
-                session.getTurns().add(newTurn);
-                sessionRepository.addTurnToSession(session.getId(), newTurn);
-
-                URI temp = attackingBotURI;
-                attackingBotURI = defendingBotURI;
-                defendingBotURI = temp;
-                continue;
-            }
-
-            // Проверяем, не победил ли attackingBot своим ходом
-            WinCheckerResults winCheckerResults = gameChecker.isWin(newGameField, attackingBotFigure);
-            if (winCheckerResults.getIsWin().equals(Boolean.TRUE)) {
-                log.info("In session {} bot {} win!", sessionId, attackingBotURI);
-                newTurn.setGameField(winCheckerResults.getNewGameField());
-                session.getTurns().add(newTurn);
-                sessionRepository.addTurnToSession(session.getId(), newTurn);
-                break;
-            }
-            session.getTurns().add(newTurn);
-            sessionRepository.addTurnToSession(session.getId(), newTurn);
-
-            // Меняем attackingBotId с defendingBotId
-            URI temp = attackingBotURI;
-            attackingBotURI = defendingBotURI;
-            defendingBotURI = temp;
-        }
-        log.info("The game ended in session {} ", sessionId);
-        return CompletableFuture.completedFuture(session);
+    public void startGame(UUID sessionId) throws InterruptedException {
+        makeNewTurn(sessionId);
     }
 
-    public boolean isBothBotsAlive(Session session, int steps) {
-        int turns = session.getTurns().size();
-        if (turns < 3) {
-            return true;
+    @Async
+    public void makeNewTurn(UUID sessionId) throws InterruptedException {
+        log.trace("Next turn in session {}", sessionId);
+        SessionWithAllTurns session = sessionRepository.findFetchTurnsBySessionId(sessionId);
+        final var turnsHistory = session.turns();
+        int currTurn = turnsHistory.size();
+        final URI currentBotUri;
+        final String currentBotId;
+        final String oppositeBotId;
+        final Figure currentFigure;
+        String currGameField = turnsHistory.get(currTurn - 1).getGameField();
+        switch (currTurn % 2 != 0 ? ATTACKING_BOT_NAME : DEFENDING_BOT_NAME) {
+            case ATTACKING_BOT_NAME -> {
+                currentBotUri = URI.create(session.attackingBotUrl());
+                currentBotId = session.attackingBotId();
+                oppositeBotId = session.defendingBotId();
+                currentFigure = ATTACKING_BOT_FIGURE;
+            }
+            case DEFENDING_BOT_NAME -> {
+                currentBotUri = URI.create(session.defendingBotUrl());
+                currentBotId = session.defendingBotId();
+                oppositeBotId = session.attackingBotId();
+                currentFigure = DEFENDING_BOT_FIGURE;
+            }
+            default -> throw new IllegalStateException();
         }
-        String prevGameField = session.getTurns().get(turns - 1 - steps).getGameField();
-        String currGameField = session.getTurns().get(turns - 1).getGameField();
-        // Если игровое поле не меняется steps ходов подряд, значит боты не живы
-        return !prevGameField.equals(currGameField);
+        log.trace("{} bot makes turn {}", currentBotId, currTurn);
+        final var turnBuilder = Turn.builder()
+            .turn(currTurn)
+            .gameField(currGameField);
+
+        // Делаем ход одним из ботов
+        final BotResponse botResponse;
+        try {
+            botResponse = botClient.makeTurn(currentBotUri, new BotRequest(currGameField));
+        } catch (BotResponseStatusCodeNotOkException e) {
+            // Если бот ответил ошибкой, тогда заканчиваем игру
+            log.warn("Bot {} responded not 200 http code", currentBotId);
+            finishGame(sessionId, oppositeBotId);
+            return;
+        }
+        String newGameField = botResponse.getGameField();
+
+        // Проверяем, что в поле изменилось именно одно поле с символа _ на символ attackingBotFigure
+        try {
+            gameChecker.validate(currGameField, newGameField, currentFigure);
+        } catch (ValidCheckerException e) {
+            // Если бот ответил невалидным полем, то не меняем поле и передаем ход другому боту
+            log.warn("Bot {} responded incorrect new field {}", currentBotId, newGameField);
+            finishGame(sessionId, oppositeBotId);
+            return;
+        }
+
+        WinCheckerResults winCheckerResults = gameChecker.isWin(newGameField, currentFigure);
+        if (winCheckerResults.win()) {
+            final var finishGameField = ((GameWinResult) winCheckerResults).newGameField();
+            sessionRepository.addTurnToSession(session.id(), turnBuilder.gameField(finishGameField).build());
+            finishGame(sessionId, currentBotId);
+            return;
+        }
+
+        Turn newTurn = turnBuilder.gameField(newGameField).build();
+        sessionRepository.addTurnToSession(session.id(), newTurn);
+        log.debug("Bot {} finished his turn", currentBotId);
+        Thread.sleep(gameConfigs.sleepDuration().toMillis());
+        gameService.makeNewTurn(session.id());
+    }
+
+    private void finishGame(UUID sessionId, String botId) {
+        log.info("GAME {} BOT {} WINS", sessionId, botId);
+        sessionRepository.finishSession(sessionId, botId);
     }
 }

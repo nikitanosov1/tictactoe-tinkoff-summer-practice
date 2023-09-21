@@ -1,46 +1,58 @@
 package ru.tinkoff.tictactoe.session.persistance.postgres;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntity;
-
-import java.net.InetAddress;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import ru.tinkoff.tictactoe.turn.persistance.postgres.TurnEntity;
 
 @Entity
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Table(name = "session_entity")
 public class SessionEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "first_bot_ip")
-    private InetAddress firstBotIp;
+    @Column(name = "attacking_bot_url")
+    private String attackingBotUrl;
+    @Column(name = "attacking_bot_id")
+    private String attackingBotId;
 
-    @Column(name = "first_bot_port")
-    private Integer firstBotPort;
+    @Column(name = "defending_bot_id")
+    private String defendingBotId;
+    @Column(name = "defending_bot_url")
+    private String defendingBotUrl;
 
-    @Column(name = "second_bot_ip")
-    private InetAddress secondBotIp;
-
-    @Column(name = "second_bot_port")
-    private Integer secondBotPort;
-
-    @OneToMany(mappedBy = "sessionEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "sessionEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<TurnEntity> turnEntities = new ArrayList<>();
 
     @Column(name = "is_active")
     private Boolean isActive;
+
+    @Column(name = "win_bot")
+    private String winBot;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)

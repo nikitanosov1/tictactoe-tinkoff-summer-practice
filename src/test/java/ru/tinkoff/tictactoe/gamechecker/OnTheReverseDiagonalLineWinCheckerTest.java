@@ -1,5 +1,6 @@
 package ru.tinkoff.tictactoe.gamechecker;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -57,8 +58,14 @@ class OnTheReverseDiagonalLineWinCheckerTest {
                 "___________________";
         Figure figure = Figure.CROSS;
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isTrue();
-        assertThat(results.getNewGameField()).isEqualTo(expectGameField);
+        final var assertion = assertThat(results)
+            .asInstanceOf(InstanceOfAssertFactories.type(GameWinResult.class));
+        assertion
+            .extracting(GameWinResult::win)
+            .isEqualTo(true);
+        assertion
+            .extracting(GameWinResult::newGameField)
+            .isEqualTo(expectGameField);
     }
 
     @Test
@@ -105,8 +112,14 @@ class OnTheReverseDiagonalLineWinCheckerTest {
                 "___________________";
         Figure figure = Figure.ZERO;
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isTrue();
-        assertThat(results.getNewGameField()).isEqualTo(expectGameField);
+        final var assertion = assertThat(results)
+            .asInstanceOf(InstanceOfAssertFactories.type(GameWinResult.class));
+        assertion
+            .extracting(GameWinResult::win)
+            .isEqualTo(true);
+        assertion
+            .extracting(GameWinResult::newGameField)
+            .isEqualTo(expectGameField);
     }
 
     private static Stream<Arguments> argsForIsWinFalse() {
@@ -162,7 +175,7 @@ class OnTheReverseDiagonalLineWinCheckerTest {
     @MethodSource("argsForIsWinFalse")
     void givenLosingGameField_whenCheck_thenReturnIsWinFalse(String gameField, Figure figure) {
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isFalse();
+        assertThat(results.win()).isFalse();
     }
 
     private static Stream<Arguments> argsForIsWinTrue() {
@@ -350,6 +363,6 @@ class OnTheReverseDiagonalLineWinCheckerTest {
     @MethodSource("argsForIsWinTrue")
     void givenLosingGameField_whenCheck_thenReturnIsWinTrue(String gameField, Figure figure) {
         WinCheckerResults results = checker.check(gameField, figure);
-        assertThat(results.getIsWin()).isTrue();
+        assertThat(results.win()).isTrue();
     }
 }

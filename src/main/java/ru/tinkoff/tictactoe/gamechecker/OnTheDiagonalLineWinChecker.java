@@ -1,12 +1,13 @@
 package ru.tinkoff.tictactoe.gamechecker;
 
+import static ru.tinkoff.tictactoe.session.Figure.getCrossOutFigure;
+
 import org.springframework.stereotype.Component;
 import ru.tinkoff.tictactoe.session.Figure;
 
-import static ru.tinkoff.tictactoe.session.Figure.getCrossOutFigure;
-
 @Component
 public class OnTheDiagonalLineWinChecker implements WinChecker {
+
     /**
      * Searches for 5 consecutive diagonal figures
      * Like<br>
@@ -17,12 +18,11 @@ public class OnTheDiagonalLineWinChecker implements WinChecker {
      * ____x<br>
      *
      * @param gameField the playing field on which we want to check the victory
-     * @param figure    the figure whose occurrences we are looking for
+     * @param figure the figure whose occurrences we are looking for
      * @return WinCheckResults
      */
     @Override
     public WinCheckerResults check(String gameField, Figure figure) {
-        WinCheckerResults results = new WinCheckerResults();
         int count;
         for (int i = -14; i < 15; i++) {
             int col = Math.max(i, 0);
@@ -38,9 +38,7 @@ public class OnTheDiagonalLineWinChecker implements WinChecker {
                         for (int j = 0; j < 5; j++) {
                             newGameField[indexInGameField - 20 * j] = getCrossOutFigure(figure).getName().charAt(0);
                         }
-                        results.setIsWin(true);
-                        results.setNewGameField(new String(newGameField));
-                        return results;
+                        return new GameWinResult(new String(newGameField));
                     }
                 } else {
                     count = 0;
@@ -49,7 +47,6 @@ public class OnTheDiagonalLineWinChecker implements WinChecker {
                 ++row;
             }
         }
-        results.setIsWin(false);
-        return results;
+        return GameContinuesResult.INSTANCE;
     }
 }
