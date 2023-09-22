@@ -48,8 +48,8 @@ public class SessionEntity {
     @Builder.Default
     private List<TurnEntity> turnEntities = new ArrayList<>();
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "status")
+    private String status;
 
     @Column(name = "win_bot")
     private String winBot;

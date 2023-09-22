@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.tictactoe.client.BotClient;
 import ru.tinkoff.tictactoe.client.BotRequest;
 import ru.tinkoff.tictactoe.client.BotResponse;
@@ -37,13 +38,16 @@ public class GameServiceImpl implements GameService {
 
     @Autowired
     @Lazy
-    private GameServiceImpl gameService;
+    private GameService gameService;
 
+    @Transactional
     public void startGame(UUID sessionId) throws InterruptedException {
-        makeNewTurn(sessionId);
+        sessionRepository.startSession(sessionId);
+        gameService.makeNewTurn(sessionId);
     }
 
     @Async
+    @Override
     public void makeNewTurn(UUID sessionId) throws InterruptedException {
         log.trace("Next turn in session {}", sessionId);
         SessionWithAllTurns session = sessionRepository.findFetchTurnsBySessionId(sessionId);

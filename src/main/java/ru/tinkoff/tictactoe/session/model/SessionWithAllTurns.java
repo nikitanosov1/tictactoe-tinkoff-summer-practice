@@ -14,7 +14,7 @@ public record SessionWithAllTurns(
     String defendingBotUrl,
     String defendingBotId,
     List<Turn> turns,
-    Boolean isActive,
+    SessionStatus status,
     Date updatedAt,
     Date createdAt
 ) {}

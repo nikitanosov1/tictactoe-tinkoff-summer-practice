@@ -28,7 +28,7 @@ public class BotClientImpl implements BotClient {
     public BotResponse makeTurn(URI baseUrl, BotRequest botRequest) {
         String url = String.format("%s%s", baseUrl, urlPath);
         HttpEntity<BotRequest> request = new HttpEntity<>(botRequest);
-        log.info("makeTurn to {}:", url);
+        log.trace("makeTurn to {}:", url);
         ResponseEntity<BotResponse> response = restTemplate.exchange(
             url,
             POST,

@@ -10,4 +10,6 @@ public interface GameService {
     Figure DEFENDING_BOT_FIGURE = Figure.ZERO;
 
     void startGame(UUID sessionId) throws InterruptedException;
+
+    void makeNewTurn(UUID sessionId) throws InterruptedException;
 }

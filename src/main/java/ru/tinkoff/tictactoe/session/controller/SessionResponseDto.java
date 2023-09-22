@@ -14,7 +14,7 @@ record SessionResponseDto(
     String attackingBotId,
     String defendingBotUrl,
     String defendingBotId,
-    Boolean isActive,
+    String status,
     Date updatedAt,
     Date createdAt
 ) {}

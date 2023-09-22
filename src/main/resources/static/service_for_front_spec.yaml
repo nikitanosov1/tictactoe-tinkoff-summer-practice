@@ -121,9 +121,13 @@ components:
           description: Id второго бота
         last_turn:
           $ref: '#/components/schemas/TurnResponseDto'
-        is_active:
-          type: boolean
-          description: Активна ли игровая сессия
+        status:
+          type: string
+          enum:
+            - NEW
+            - ONGOING
+            - FINISHED
+          description: Статус игровой сессии
         updated_at:
           type: string
           format: timestamp
@@ -151,9 +155,13 @@ components:
         defending_bot_id:
           type: string
           description: Id второго бота
-        is_active:
-          type: boolean
-          description: Активна ли игровая сессия
+        status:
+          type: string
+          enum:
+            - NEW
+            - ONGOING
+            - FINISHED
+          description: Статус игровой сессии
         updated_at:
           type: string
           format: timestamp

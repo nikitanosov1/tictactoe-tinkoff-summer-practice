@@ -3,18 +3,23 @@ version: '3'
 services:
   mediator:
     container_name: 'mediator'
+    env_file:
+      - .env
     depends_on:
       - db
     build: .
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:${DB_EXTERNAL_PORT}/${POSTGRES_DB}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_JPA_SHOW_SQL=false
     ports:
       - "8080:8080"
     volumes:
       - ./src:/src
+    networks:
+      - internal
 
   db:
     container_name: 'db'
@@ -22,6 +27,12 @@ services:
     env_file:
       - .env
     ports:
-      - "5432:5432"
+      - "6543:5432"
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+    networks:
+      - internal
+
+networks:
+  internal:
+    name: internal

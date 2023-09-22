@@ -11,7 +11,7 @@ public record Session(
     String attackingBotId,
     String defendingBotUrl,
     String defendingBotId,
-    Boolean isActive,
+    SessionStatus status,
     Date updatedAt,
     Date createdAt
 ) {}

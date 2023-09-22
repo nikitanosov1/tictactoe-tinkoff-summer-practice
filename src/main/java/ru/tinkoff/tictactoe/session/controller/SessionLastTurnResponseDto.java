@@ -15,7 +15,7 @@ record SessionLastTurnResponseDto(
     String defendingBotUrl,
     String defendingBotId,
     TurnResponseDto lastTurn,
-    Boolean isActive,
+    String status,
     Date updatedAt,
     Date createdAt
 ) {}

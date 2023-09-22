@@ -1,7 +1,6 @@
 package ru.tinkoff.tictactoe.session.model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import lombok.Builder;
 import ru.tinkoff.tictactoe.turn.model.Turn;
@@ -14,7 +13,7 @@ public record SessionWithLastTurn(
     String defendingBotUrl,
     String defendingBotId,
     Turn lastTurn,
-    Boolean isActive,
+    SessionStatus status,
     Date updatedAt,
     Date createdAt
 ) {}

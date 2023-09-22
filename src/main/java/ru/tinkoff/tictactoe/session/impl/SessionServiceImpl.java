@@ -12,7 +12,7 @@ import ru.tinkoff.tictactoe.session.SessionRepository;
 import ru.tinkoff.tictactoe.session.SessionService;
 import ru.tinkoff.tictactoe.session.exception.SessionIsAlreadyFullException;
 import ru.tinkoff.tictactoe.session.model.Session;
-import ru.tinkoff.tictactoe.session.model.SessionWithAllTurns;
+import ru.tinkoff.tictactoe.session.model.SessionStatus;
 import ru.tinkoff.tictactoe.session.model.SessionWithLastTurn;
 
 @Slf4j
@@ -33,12 +33,12 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Figure registerBotInSession(UUID sessionId, String url, String botId) throws InterruptedException {
         Session session = sessionRepository.findBySessionId(sessionId);
+        if (session.status() != SessionStatus.NEW) {
+            throw new SessionIsAlreadyFullException();
+        }
         if (session.attackingBotUrl() == null) {
             sessionRepository.setAttackingBot(sessionId, url, botId);
             return GameService.ATTACKING_BOT_FIGURE;
-        }
-        if (session.defendingBotUrl() != null) {
-            throw new SessionIsAlreadyFullException();
         }
         sessionRepository.setDefendingBot(sessionId, url, botId);
         gameService.startGame(session.id());

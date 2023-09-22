@@ -1,12 +1,13 @@
 create table session_entity
 (
-    first_bot_port  integer,
-    is_active       boolean,
-    second_bot_port integer,
-    created_at      timestamp(6),
-    updated_at      timestamp(6),
-    id              uuid not null,
-    first_bot_ip    inet,
-    second_bot_ip   inet,
+    status            varchar(20),
+    created_at        timestamp(6),
+    updated_at        timestamp(6),
+    id                uuid not null,
+    attacking_bot_url varchar(100),
+    attacking_bot_id  varchar(30),
+    defending_bot_url varchar(100),
+    defending_bot_id  varchar(30),
+    win_bot           varchar(30),
     primary key (id)
 )
