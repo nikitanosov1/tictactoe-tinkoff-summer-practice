@@ -1,1 +1,10 @@
-rootProject.name = 'tictactoe'
+pluginManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'tic-tac-toe'
+
+include(":bot")
+include(":mediator")

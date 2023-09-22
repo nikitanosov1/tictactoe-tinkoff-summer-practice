@@ -1,0 +1,9 @@
+server:
+  port: 8081
+
+config:
+  session-uuid: ${SESSION_ID}
+  bot-url: ${BOT_URL}
+  bot-id: ${BOT_ID}
+  mediator-address: ${MEDIATOR_URL}
+  game-field-size: 19

@@ -14,7 +14,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    build: .
+    build:
+      dockerfile: ./mediator/Dockerfile
+      context: ./
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:${DB_INTERNAL_PORT}/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}

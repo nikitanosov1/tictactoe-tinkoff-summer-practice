@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: Game mediator
+  description: |-
+    Взаимодействие сервиса медиатора с фронтом
+  contact:
+    email: nikinosov2002@mail.ru
+  version: 1.0.0
+paths:
+  /sessions:
+    post:
+      summary: Создать игровую сессию
+      description: Создается пустая игровая сессия
+      operationId: createSession
+      responses:
+        '200':
+          description: Сессия успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionCreateResponse'
+    get:
+      summary: Получить все текущие и законченные игровые сессии
+      description: Если query-параметр isActive не передан, то тогда возвращаются все сессии, иначе получим только активные/неактивные игровые сессии в зависимости от значения параметра isActive
+      operationId: getAllSessions
+      parameters:
+        - name: isActive
+          in: query
+          description: Флаг активности сессии
+          required: false
+          schema:
+            type: string
+            format: boolean
+      responses:
+        '200':
+          description: Сессии успешно получены
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SessionResponseDto'
+        '400':
+          description: Некорректный запрос
+  /sessions/{session_id}:
+    get:
+      description: Запросить актуальное состояние сессии
+      parameters:
+        - name: session_id
+          in: path
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: id сессии
+      responses:
+        '200':
+          $ref: '#/components/schemas/SessionWithLastTurnResponseDto'
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Не найдена игровая сессия с таким session_id и шагом turn
+  /sessions/{session_id}/turn/{turn}:
+    get:
+      summary: Получить состояние сессии по id и номеру шага
+      description: Получить состояние сессии по ее session_id и номеру шага turn
+      operationId: getSessionStateBySessionIdAndTurn
+      parameters:
+        - name: session_id
+          in: path
+          description: UUID сессии
+          required: true
+          schema:
+            type: string
+            format: UUID
+        - name: turn
+          in: path
+          description: номер хода
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Состояние сессии в момент шага turn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TurnResponseDto'
+        '400':
+          description: Некорректный запрос
+        '404':
+          description: Не найдена игровая сессия с таким session_id и шагом turn
+components:
+  schemas:
+    SessionCreateResponse:
+      type: object
+      properties:
+        session_id:
+          type: string
+          format: UUID
+          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+    SessionWithLastTurnResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+        attacking_bot_url:
+          type: string
+          description: Url первого бота
+        attacking_bot_id:
+          type: string
+          description: Id первого бота
+        defending_bot_url:
+          type: string
+          description: Url второго бота
+        defending_bot_id:
+          type: string
+          description: Id второго бота
+        last_turn:
+          $ref: '#/components/schemas/TurnResponseDto'
+        status:
+          type: string
+          enum:
+            - NEW
+            - ONGOING
+            - FINISHED
+          description: Статус игровой сессии
+        updated_at:
+          type: string
+          format: timestamp
+          description: Время последнего обновления сессии
+        created_at:
+          type: string
+          format: timestamp
+          description: Время создания сессии
+        win_bot:
+          type: string
+          description: id победившего бота
+    SessionResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "e58ed763-928c-4155-bee9-fdbaaadc15f3"
+        attacking_bot_url:
+          type: string
+          description: Url первого бота
+        attacking_bot_id:
+          type: string
+          description: Id первого бота
+        defending_bot_url:
+          type: string
+          description: Url второго бота
+        defending_bot_id:
+          type: string
+          description: Id второго бота
+        status:
+          type: string
+          enum:
+            - NEW
+            - ONGOING
+            - FINISHED
+          description: Статус игровой сессии
+        updated_at:
+          type: string
+          format: timestamp
+          description: Время последнего обновления сессии
+        created_at:
+          type: string
+          format: timestamp
+          description: Время создания сессии
+    TurnResponseDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        turn:
+          type: number
+          description: номер шага
+        game_field:
+          type: string
+          description: состояние поля на этом шаге
+        created_at:
+          type: string
+          format: timestamp
+          description: Время шага
